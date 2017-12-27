@@ -114,6 +114,7 @@
     <ClCompile Include="HDD.cpp" />
     <ClCompile Include="Help.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Pipeline.cpp" />
     <ClCompile Include="RAM.cpp" />
     <ClCompile Include="Shell.cpp" />
   </ItemGroup>
@@ -122,6 +123,7 @@
     <ClInclude Include="Biblioteki.h" />
     <ClInclude Include="HDD.h" />
     <ClInclude Include="Help.h" />
+    <ClInclude Include="Pipeline.h" />
     <ClInclude Include="RAM.h" />
     <ClInclude Include="Shell.h" />
   </ItemGroup>
