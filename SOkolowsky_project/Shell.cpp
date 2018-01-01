@@ -488,6 +488,7 @@ void SHELL::credits()
 	std::cout << "Patryk Romaniak \t Zarzadzanie pamiecia" << std::endl;
 	std::cout << "Eryk Sokolowski \t Zadania w assemblerze" << std::endl;
 	std::cout << "Damian Reczulski \t Zarzadzanie procesorem" << std::endl;
+	std::cout << "Adrian Staskiewicz \t Zarzadzanie plikami i katalogami metoda indeksowa" << std::endl;
 	std::cout << "Maksymilian Slowinski \t Komunikacja miedzy procesorami" << std::endl << std::endl << std::endl;
 }
 
