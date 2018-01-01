@@ -1,6 +1,6 @@
 #pragma once
 #include "Biblioteki.h"
-#include "HELP.h"
+#include "Help.h"
 #include "HDD.h"
 #include "ACL.h"
 

@@ -1,7 +1,22 @@
 #pragma once
 #include "Biblioteki.h"
-class help_functions {
+class HELP_CLASS
+{
 public:
-	void CreateFile(std::string txt, int ilosc_bajtow);
-	void CreateFile_inf();											//pomoc do funkcji CreateFile
+	/// DYSK
+	void CREATEFILE_H();
+	void READFILE_H();
+	void DELETEFILE_H();
+
+	/// ACL
+	void USERADD_H();
+	void USERDEL_H();
+	void GROUPADD_H();
+	void GROUPDEL_H();
+	void SWITCHUSER_H();
+	void ADDTOGROUP_H();
+	void GETFACL_H();
+
+	/// MY
+	void HELP_F();
 };
