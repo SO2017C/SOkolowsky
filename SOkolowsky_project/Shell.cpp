@@ -1,26 +1,31 @@
 #include "Shell.h"
-#include "HDD.h"
-#include "ACL.h"
 
 
-HDD DISK;
-Uprawnienia uprawnienia;
 
-//User administartor = { "admin","admin" };
+
+
 
 /* FORMATOWANIE DANYCH */
 SHELL::spis_funkcji SHELL::str_to_int(const std::string & Funkcja)
 {
-	if (Funkcja == "CF") return CF;
-	else if (Funkcja == "RF") return RF;
+	///HDD
+	if (Funkcja == "CF") return CREATEFILE;
+	else if (Funkcja == "RF") return READFILE;
+	else if (Funkcja == "DF") return DELETEFILE;
+	///ACL
+	else if (Funkcja == "USERADD") return USERADD;
+	else if (Funkcja == "USERDEL") return USERDEL;
+	else if (Funkcja == "GROUPADD") return GROUPADD;
+	else if (Funkcja == "GROUPDEL") return GROUPDEL;
+	else if (Funkcja == "SU") return SWITCHUSER;
+	else if (Funkcja == "DISPLAYUSERS") return DISPLAYUSERS;
+	else if (Funkcja == "DISPLAYGROUPS") return DISPLAYGROUPS;
+	else if (Funkcja == "ADDTOGROUP") return ADDTOGROUP;
+	else if (Funkcja == "GETFACL") return GETFACL;
+	/// MY
 	else if (Funkcja == "HELP") return HELP;
 	else if (Funkcja == "CREDITS")return CREDITS;
 	else if (Funkcja == "EXIT") return EXIT;
-	else if (Funkcja == "USERADD") return USERADD;
-	else if (Funkcja == "DISPLAYUSERS") return DISPLAYUSERS;
-	else if (Funkcja == "DISPLAYGROUPS") return DISPLAYGROUPS;
-	else if (Funkcja == "SU") return SU;
-	else if (Funkcja == "GETFACL") return GETFACL;
 	else return OTHER;
 }
 bool SHELL::are_there_letters(const std::string &s)
@@ -69,9 +74,9 @@ void SHELL::command()
 	std::string zdanie;
 	std::getline(std::cin, zdanie);									// pobranie linijki wypisanej przez uzytkownika
 	std::smatch sm;
-	std::regex regex("[a-zA-Z][a-zA-Z0-9_]*|[1-9][0-9]*|[/][?]");	// minimum 1 literka, string zaczyna sie od litery moze zawierac "_" oraz liczby, np. program_1 | p_1 | p
-																	// liczba zaczyna sie od 1: czyli nie mo¿na zrobiæ 001 - wlasciwie to uzytkownik moze to wpisac, ale my zobaczymy tylko 1...
-																	// no i nasz parametr specjalny: /? (wywolanie pomocy)
+	std::regex regex("[a-zA-Z0-9_!@#$%*^&()\\[\\]+-={}';.,/?]+|[1-9][0-9]*");	// minimum 1 literka, string zaczyna sie od obojetnie czego
+																				// liczba zaczyna sie od 1: czyli nie mo¿na zrobiæ 001 - wlasciwie to uzytkownik moze to wpisac, ale my zobaczymy tylko 1...
+																				// no i nasz parametr specjalny: /? (wywolanie pomocy)
 
 	while (std::regex_search(zdanie, sm, regex))					// za pomoca wyrazenia regularnego wyfiltrowanie rzeczy, ktore wypisal uzytkownik
 	{
@@ -80,8 +85,7 @@ void SHELL::command()
 	}
 	if (command_line.size() < 1)									// jesli ktos podal zdanie zawierajacy tylko: " \ / | % ! - = * +, to wtedy size jest rowny 0, gdyz regex go nie wylapie
 	{
-		error_r();
-		std::cout << "::> ";
+		std::cout << uprawnienia.zwroc_zalogowanego_uzytkownika().name << "::> ";
 		command_line.clear();
 	}
 	else if (are_there_letters(command_line[0]))					// jesli w pierwszym wyrazie sa literki
@@ -92,15 +96,15 @@ void SHELL::command()
 	}																// w CMD kolejnosc nie ma znaczenia, rowniez chcialem aby moj shell byl podobny
 	else															// jezeli ktos wpisze np. tylko: ";)" "$$" to wtedy command_line.size() == 0, czyli wywolujemy ze ma podac w 1. parametrze funkcje
 	{
-		std::cout << "Prosze podac w pierwszym parametrze funkcje" << std::endl << std::endl;
-		std::cout << "::> ";
+		error_r();
+		std::cout << uprawnienia.zwroc_zalogowanego_uzytkownika().name << "::> ";
 		command_line.clear();
 	}
 }
 void SHELL::run()
 {
 	do {
-		std::cout <<uprawnienia.zwroc_zalogowanego_uzytkownika().name << "::> ";									 // wypisanie naszego "znaku poczatku komendy" - czy jak to nazwac
+		std::cout << uprawnienia.zwroc_zalogowanego_uzytkownika().name << "::> ";									 // wypisanie naszego "znaku poczatku komendy" - czy jak to nazwac
 		command_line.clear();									 // wyczyszczenie command_line z poprzedniej komendy (tej ktora zostala wykonana)
 		while (command_line.size() <= 0)						 // jezeli ktos podal np. "||" jako nazwe funkcji, to petla sie powtarza lub jesli sa jakies nieprawidlowe parametry
 		{
@@ -114,120 +118,325 @@ void SHELL::switch_case()
 {
 	switch (str_to_int(command_line[0]))
 	{
+
 		/// DYSK
-	case CF:
-		if (command_line.size() == 2 && command_line[1] == "/?")									// CF + 1 parametr, ktorym jest "/?"
+	case CREATEFILE:
+	{
+		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))				// help							
 		{
-			h_f.CreateFile_inf();
+			help_class.CREATEFILE_H();
 		}
-		else if (command_line.size() == 4 && are_there_numbers(command_line[2]))							// CF + 2 parametry ( z czego jeden parametr to int - wielkosc pliku a drugi to string - nazwa pliku)
+		else if (command_line.size() == 3 && are_there_numbers(command_line[2]))													// stworz plik bez tekstu
 		{
-			DISK.create_file(command_line[1], std::stoi(command_line[2]), command_line[3]);						// w powyzszym przypadku, bede odwolywal sie do modulu "DISK" oraz wywolywal funkcje "Create_file"
-			uprawnienia.stworzACL(command_line[1]);//TU IF CZY SIE UDALO STWORZYC!
-			//uprawnienia.getfacl(command_line[1]);
+			std::cout << "stworzono plik";
+		}
+		else if (command_line.size() >= 4 && are_there_numbers(command_line[2]))													// stworz plik z tekstem
+		{
+			std::string tekst;
+			for (int i = 3; i < command_line.size(); i++)
+			{
+				if (i == command_line.size() - 1)
+					tekst += command_line[i];
+				else
+					tekst += command_line[i] += ' ';
+			}
+			if (std::stoi(command_line[2]) >= tekst.size())
+			{
+
+				DISK.create_file(command_line[1], std::stoi(command_line[2]), tekst);
+				uprawnienia.stworzACL(command_line[1]);//TU IF CZY SIE UDALO STWORZYC!
+													   //uprawnienia.getfacl(command_line[1]);
+			}
+			else
+			{
+				std::cout << "File couldn't be created." << std::endl;
+				std::cout << "The amount of characters you typed," << std::endl;
+				std::cout << "exceeded the amount that disk dedicated for that file" << std::endl;
+			}
 		}
 		else
 		{
-			error_r();																				// Jezeli mamy 1 lub >2 parametry, to wtedy wywolujemy funkcje error_r();
+			help_class.HELP_F();
 		}
 		break;
-	case RF:																						// tak samo bede robil dla kazdej innej funkcji
-		if (command_line.size() == 2 && command_line[1] == "/?")
+	}
+	case READFILE:
+	{
+		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
 		{
-			//h_f.ReadFile_inf();
+			help_class.READFILE_H();
 		}
-		else if (command_line.size() == 2 && command_line[1] != "/?")
+		else if (command_line.size() == 2)
 		{
 			if (uprawnienia.zgoda_na_odczyt(command_line[1]) == true) {
 				std::cout << DISK.read_file(command_line[1]) << std::endl;
+			}
+			else
+			{
+				std::cout << "User \"" << uprawnienia.zwroc_zalogowanego_uzytkownika().name << "\" does not have permissions to read that file" << std::endl;
 			}
 
 		}
 		else
 		{
-			error_r();																				// Jezeli mamy 1 lub >2 parametry, to wtedy wywolujemy funkcje error_r();
+			help_class.HELP_F();
 		}
 
 		break;
-
-
-		/// Kamil
-	case USERADD:
-		if (command_line.size() == 3)
+	}
+	case DELETEFILE:
+	{
+		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
 		{
-			uprawnienia.dodaj_uzytkownika(command_line[1], command_line[2]);
+			help_class.DELETEFILE_H();
 		}
 		else if (command_line.size() == 2)
 		{
-			uprawnienia.dodaj_uzytkownika(command_line[1], "");
+			if (uprawnienia.zgoda_na_usuniecie(command_line[1]) == true) {
+				DISK.delete_file(command_line[1]);
+				uprawnienia.deleteACL(command_line[1]);
+			}
+			else
+			{
+				std::cout << "tu znowu w dupie" << std::endl;
+			}
 		}
 		else
 		{
-			error_r();																				// Jezeli mamy 1 lub >2 parametry, to wtedy wywolujemy funkcje error_r();
+			help_class.HELP_F();
 		}
-		break;
 
-	case GROUPADD:
-		if (command_line.size() == 3 || command_line.size() == 2)
+		break;
+	}
+	/// ACL
+	case USERADD:
+	{
+		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
 		{
-			uprawnienia.dodaj_uzytkownika(command_line[1], command_line[2]);
+			help_class.USERADD_H();
+		}
+		else if (command_line.size() == 3)
+		{
+			if (uprawnienia.uzytkownik_istnieje(command_line[1]) == false)
+			{
+				uprawnienia.dodaj_uzytkownika(command_line[1], command_line[2]);
+				std::cout << "The user \"" << command_line[1] << "\" has been successfully created." << std::endl << std::endl;
+			}
+			else
+			{
+				std::cout << "User with name \"" << command_line[1] << "\" already exists." << std::endl << std::endl;
+			}
+
+		}
+		else if (command_line.size() == 2)
+		{
+			if (uprawnienia.uzytkownik_istnieje(command_line[1]) == false)
+			{
+				uprawnienia.dodaj_uzytkownika(command_line[1], "");
+				std::cout << "The user \"" << command_line[1] << "\" has been successfully added." << std::endl << std::endl;
+			}
+			else
+			{
+				std::cout << "User with name \"" << command_line[1] << "\" already exists." << std::endl << std::endl;
+			}
 		}
 		else
 		{
-			error_r();																				// Jezeli mamy 1 lub >2 parametry, to wtedy wywolujemy funkcje error_r();
+			help_class.HELP_F();
 		}
 		break;
+	}
+	case USERDEL:
+	{
+		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
+		{
+			help_class.USERDEL_H();
+		}
+		else if (command_line.size() == 2)
+		{
+			if (uprawnienia.uzytkownik_istnieje(command_line[1]))
+			{
+				uprawnienia.usun_uzytkownika(command_line[1]);
+				std::cout << "User \"" << command_line[1] << "\" was deleted" << std::endl << std::endl;
+			}
+			else
+			{
+				std::cout << "User \"" << command_line[1] << "\" was not found" << std::endl << std::endl;
+			}
+		}
+		else
+		{
+			help_class.HELP_F();
+		}
+		break;
+	}
 	case DISPLAYUSERS:
+	{
 		uprawnienia.wyswietl_uzytkownikow();
 		break;
-	case DISPLAYGROUPS:
-		uprawnienia.wyswietl_grupy();
-		break;
-	case SU:
-		if (command_line.size() == 3)
-			uprawnienia.przelacz_uzytkownika(command_line[1], command_line[2]);
-		else if (command_line.size() == 2)
-			uprawnienia.przelacz_uzytkownika(command_line[1], "");
+	}
+	case GROUPADD:
+	{
+		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
+		{
+			help_class.GROUPADD_H();
+		}
+		if (command_line.size() == 2)
+		{
+			if (uprawnienia.uzytkownik_istnieje(command_line[1]) == false)
+			{
+				uprawnienia.dodaj_grupe(command_line[1]);
+				std::cout << "The group \"" << command_line[1] << "\" has been successfully created." << std::endl << std::endl;
+			}
+			else
+			{
+				std::cout << "Group with name \"" << command_line[1] << "\" already exists." << std::endl << std::endl;
+			}
+
+		}
 		else
 		{
-			error_r();																				// Jezeli mamy 1 lub >2 parametry, to wtedy wywolujemy funkcje error_r();
+			help_class.HELP_F();
 		}
 		break;
-
-	case GETFACL:
-		uprawnienia.getfacl(command_line[1]);
+	}
+	case GROUPDEL:
+	{
+		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
+		{
+			help_class.GROUPDEL_H();
+		}
+		if (command_line.size() == 2)
+		{
+			if (uprawnienia.grupa_istnieje(command_line[1]))
+			{
+				uprawnienia.usun_grupe(command_line[1]);
+				std::cout << "Group \"" << command_line[1] << "\" was deleted" << std::endl << std::endl;
+			}
+			else
+			{
+				std::cout << "Group \"" << command_line[1] << "\" was not found" << std::endl << std::endl;
+			}
+		}
+		else
+		{
+			help_class.HELP_F();
+		}
 		break;
+	}
+	case DISPLAYGROUPS:
+	{
+		uprawnienia.wyswietl_grupy();
+		break;
+	}
+	case SWITCHUSER:
+	{
+		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
+		{
+			help_class.SWITCHUSER_H();
+		}
+		else if (command_line.size() == 3)
+		{
+			uprawnienia.przelacz_uzytkownika(command_line[1], command_line[2]);
+		}
+		else if (command_line.size() == 2)
+		{
+			uprawnienia.przelacz_uzytkownika(command_line[1], "");
+		}
+		else
+		{
+			help_class.HELP_F();
+		}
+		break;
+	}
+	case ADDTOGROUP:
+	{
+		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
+		{
+			help_class.ADDTOGROUP_H();
+		}
+		else if (command_line.size() == 3)
+		{
+			uprawnienia.dodaj_do_grupy(command_line[1], command_line[2]);
+		}
+		else
+		{
+			help_class.HELP_F();
+		}
+
+		break;
+	}
+	case GETFACL:
+	{
+		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
+		{
+			help_class.GETFACL_H();
+		}
+		else if (command_line.size() == 2)
+		{
+			uprawnienia.getfacl(command_line[1]);
+		}
+		else
+		{
+			help_class.HELP_F();
+		}
+
+		break;
+	}
+	/// MY
 	case HELP:
+	{
 		help();
 		break;
+	}
 	case EXIT:
+	{
 		exit();
 		break;
+	}
 	case CREDITS:
+	{
 		credits();
 		break;
-	case OTHER:																											// szczegolny przypadek gdy nie znajde funkcji u siebie
-																														// interpreter.COSTAM(command_line);
-		if (command_line[0].size() == MAX_dl_lit_as)																	// jezeli nazwa funkcji ma 2 znaki, to przesylam do interpretera
-			std::cout << "Przeslanie komendy wpisanej przez uzytkownika do interpretera" << std::endl << std::endl;
-		else
-			error_r();																									// jezeli nie, to wywoluje metode error_r();
+	}
+	case OTHER:
+	{																												// interpreter.COSTAM(command_line);
+		error_r();																									// jezeli nie, to wywoluje metode error_r();
 		break;
+	}
+
 	}
 }
 
 /* METODY POMOCNICZE */
 void SHELL::error_r()
 {
-	std::cout << "Prosze wpisac poprawna funkcje oraz jej parametry, jezeli nie wiesz jakie sa napisz: HELP,\npo dokladniejsze informacje napisz: NAZWAFUNKCJI /?" << std::endl << std::endl;
+	std::cout << "'" << command_line[0] << "' is not recognized as an internal or external command," << std::endl;
+	std::cout << "operable program or batch file." << std::endl;
 }
 void SHELL::help()
 {
 	std::cout << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
-	std::cout << "Dostepne sa podane funkcje" << std::endl;
-	std::cout << "CF   RF   HELP   CREDITS   EXIT" << std::endl << std::endl;
-	std::cout << "Aby poznac parametry wpisz: \"FUNKCJA /?\" np. CF /?" << std::endl;
-	std::cout << std::endl << std::endl;
+	std::cout << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
+	std::cout << "Available commands: " << std::endl;
+	std::cout << "CF - creating a new file" << std::endl;
+	std::cout << "RF - reading the content from an existing file" << std::endl;
+	std::cout << "DF - deleting an existing file" << std::endl;
+	std::cout << "USERADD - creating a new user" << std::endl;
+	std::cout << "USERDEL - deleting an existing user" << std::endl;
+	std::cout << "DISPLAYUSERS - displaying all known users" << std::endl;
+	std::cout << "GROUPADD - creating a new empty group of users" << std::endl;
+	std::cout << "GROUPDEL - deleting an existing group of users" << std::endl;
+	std::cout << "DISPLAYGROUPS - displaying all known groups of users" << std::endl;
+	std::cout << "SU - switching to another available user" << std::endl;
+	std::cout << "ADDTOGROUP - adding an existing user to an existing group" << std::endl;
+	std::cout << "GETFACL - getting the file access control list for an existing file" << std::endl;
+	std::cout << "CREDITS - displaying creators of the operation system" << std::endl;
+	std::cout << "EXIT - exiting from the operation system" << std::endl << std::endl << std::endl;
+	std::cout << "For further informations type: \"FUNCTION /?\"" << std::endl;
+	std::cout << "Example: CF /?" << std::endl;
+	std::cout << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
+	std::cout << std::endl << std::endl << std::endl;
 }
 void SHELL::boot() // wyswietlenie loga
 {
@@ -265,7 +474,7 @@ void SHELL::boot() // wyswietlenie loga
 	std::cin.get();
 	system("cls");
 
-	std::cout << "SOkolowsky [Version 0.4.263]" << std::endl;
+	std::cout << "SOkolowsky [Version 0.5.530]" << std::endl;
 	std::cout << "<c> 2018 SOkolowsky Project Group. Wszelkie prawa zastrzezone." << std::endl;
 }
 void SHELL::credits()
@@ -341,72 +550,6 @@ SHELL::SHELL()
 
 
 //"[a-zA-Z_!@#$%^&()+-={}';.,][a-zA-Z0-9_!@#$%^&()+-={}';.,]*
-
-
-
-
-/*
-
-case AD:
-case MV:
-case RX:
-...
-case SV:
-interpreter(command_line);
-break;
-case OTHER:
-error_r();
-
-*/
-
-
-
-
-
-
-
-
-/*
-std::cout << "                                                                             .                                         " << std::endl;
-std::cout << "                                        `#.:`                            `+.#,;                                        " << std::endl;
-std::cout << "                                       `+#+'+'`',                     '.;''++',                                        " << std::endl;
-std::cout << "                                       ,+++'''''''                  ,;;'''''+#:                                        " << std::endl;
-std::cout << "                                       .+#+''';;;;;:              ,;;;;;;''''',                                        " << std::endl;
-std::cout << "                                       `++''''';;;;;::          ,:;;;;;;;''''+'                                        " << std::endl;
-std::cout << "                                        ;++'''+'';;;;;;:  `.` ,:;;;;;;;''''++#`                                        " << std::endl;
-std::cout << "                                        `,;'''';';;;;;;';;;;;;';;;;;;;';;''''.                                         " << std::endl;
-std::cout << "                                         `:+'''''';;;;;;;';;';;;;;;;';;'';'+.                                          " << std::endl;
-std::cout << "                                          `,++''';;';;;;;'''';''';''''';'+,.                                           " << std::endl;
-std::cout << "                                            `,':+'';;;:;;';+;':;;';'''':,`                                             " << std::endl;
-std::cout << "                                              ``.,:;;;,..;';;;``,,,,,.`                                                " << std::endl;
-std::cout << "                                                   ``  .;':;:';;                                                       " << std::endl;
-std::cout << "                                                      `';;:':;;;                                                       " << std::endl;
-std::cout << "                                                       .+';';'+`                                                       " << std::endl;
-std::cout << "                                                         `'+:.                                                         " << std::endl;
-std::cout << "                                                          ```                                                          " << std::endl;
-
-std::cout << "_____________________________________________________________________________._________________________________________" << std::endl;
-std::cout << "________________________________________`#.:`____________________________`+.#,;________________________________________" << std::endl;
-std::cout << "_______________________________________`+#+'+'`',_____________________'.;''++',________________________________________" << std::endl;
-std::cout << "_______________________________________,+++'''''''__________________,;;'''''+#:________________________________________" << std::endl;
-std::cout << "_______________________________________.+#+''';;;;;:______________,;;;;;;''''',________________________________________" << std::endl;
-std::cout << "_______________________________________`++''''';;;;;::__________,:;;;;;;;''''+'________________________________________" << std::endl;
-std::cout << "________________________________________;++'''+'';;;;;;:__`.`_,:;;;;;;;''''++#`________________________________________" << std::endl;
-std::cout << "________________________________________`,;'''';';;;;;;';;;;;;';;;;;;;';;''''._________________________________________" << std::endl;
-std::cout << "_________________________________________`:+'''''';;;;;;;';;';;;;;;;';;'';'+.__________________________________________" << std::endl;
-std::cout << "__________________________________________`,++''';;';;;;;'''';''';''''';'+,.___________________________________________" << std::endl;
-std::cout << "____________________________________________`,':+'';;;:;;';+;':;;';'''':,`_____________________________________________" << std::endl;
-std::cout << "______________________________________________``.,:;;;,..;';;;``,,,,,.`________________________________________________" << std::endl;
-std::cout << "___________________________________________________``__.;':;:';;_______________________________________________________" << std::endl;
-std::cout << "______________________________________________________`';;:':;;;_______________________________________________________" << std::endl;
-std::cout << "_______________________________________________________.+';';'+`_______________________________________________________" << std::endl;
-std::cout << "_________________________________________________________`'+:._________________________________________________________" << std::endl;
-std::cout << "__________________________________________________________```__________________________________________________________" << std::endl;
-
-*/
-
-
-
 
 
 
