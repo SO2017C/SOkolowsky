@@ -18,10 +18,11 @@ SHELL::spis_funkcji SHELL::str_to_int(const std::string & Funkcja)
 	else if (Funkcja == "GROUPADD") return GROUPADD;
 	else if (Funkcja == "GROUPDEL") return GROUPDEL;
 	else if (Funkcja == "SU") return SWITCHUSER;
-	else if (Funkcja == "DISPLAYUSERS") return DISPLAYUSERS;
-	else if (Funkcja == "DISPLAYGROUPS") return DISPLAYGROUPS;
-	else if (Funkcja == "ADDTOGROUP") return ADDTOGROUP;
+	else if (Funkcja == "DU") return DISPLAYUSERS;
+	else if (Funkcja == "DG") return DISPLAYGROUPS;
+	else if (Funkcja == "USERMOD") return USERMOD;
 	else if (Funkcja == "GETFACL") return GETFACL;
+	else if (Funkcja == "SETFACL") return SETFACL;
 	/// MY
 	else if (Funkcja == "HELP") return HELP;
 	else if (Funkcja == "CREDITS")return CREDITS;
@@ -349,11 +350,11 @@ void SHELL::switch_case()
 		}
 		break;
 	}
-	case ADDTOGROUP:
+	case USERMOD:
 	{
 		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
 		{
-			help_class.ADDTOGROUP_H();
+			help_class.USERMOD_H();
 		}
 		else if (command_line.size() == 3)
 		{
@@ -375,6 +376,61 @@ void SHELL::switch_case()
 		else if (command_line.size() == 2)
 		{
 			uprawnienia.getfacl(command_line[1]);
+		}
+		else
+		{
+			help_class.HELP_F();
+		}
+
+		break;
+	}
+	case SETFACL: // pora¿ka totalna ||| setfacl[0] -m[1] u:user:7[2] test[3]
+	{
+		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
+		{
+			help_class.SETFACL_H();
+		}
+		else if (command_line.size() == 4 &&
+			(command_line[1] == "-m" || command_line[1] == "-x") &&
+			(command_line[2].at(0) == 'u' || command_line[2].at(0) == 'g' || command_line[2].at(0) == 'm' || command_line[2].at(0) == 'o')
+			)
+		{
+			int licznik = 0;
+			for (int i = 0; i < command_line[2].size(); i++)
+			{
+				if (command_line[2].at(i) == ':') licznik++;
+			}
+
+			if (licznik == 2)
+			{
+				int poz_dwu = command_line[2].size() - 2; // u:jan:7 command_line.size()-2 -> ':'
+				if (command_line[2].at(poz_dwu) == ':')
+				{
+					
+					if (command_line[2].at(command_line[2].size() - 1) == '1' ||
+						command_line[2].at(command_line[2].size() - 1) == '2' ||
+						command_line[2].at(command_line[2].size() - 1) == '3' ||
+						command_line[2].at(command_line[2].size() - 1) == '4' ||
+						command_line[2].at(command_line[2].size() - 1) == '5' ||
+						command_line[2].at(command_line[2].size() - 1) == '6' ||
+						command_line[2].at(command_line[2].size() - 1) == '7'
+						)
+
+					{
+						char right = command_line[2].at(command_line[2].size() - 1);
+						command_line[2].resize(command_line[2].size() - 2);
+						uprawnienia.setfacl(command_line[1].at(1), command_line[2], right, command_line[3]);
+					}
+					else
+					{
+						help_class.HELP_F();
+					}
+				}
+				else
+				{
+					help_class.HELP_F();
+				}
+			}
 		}
 		else
 		{
@@ -424,19 +480,20 @@ void SHELL::help()
 	std::cout << "DF - deleting an existing file" << std::endl;
 	std::cout << "USERADD - creating a new user" << std::endl;
 	std::cout << "USERDEL - deleting an existing user" << std::endl;
-	std::cout << "DISPLAYUSERS - displaying all known users" << std::endl;
+	std::cout << "DU - displaying all known users" << std::endl;
 	std::cout << "GROUPADD - creating a new empty group of users" << std::endl;
 	std::cout << "GROUPDEL - deleting an existing group of users" << std::endl;
-	std::cout << "DISPLAYGROUPS - displaying all known groups of users" << std::endl;
+	std::cout << "DG - displaying all known groups of users" << std::endl;
 	std::cout << "SU - switching to another available user" << std::endl;
 	std::cout << "ADDTOGROUP - adding an existing user to an existing group" << std::endl;
 	std::cout << "GETFACL - getting the file access control list for an existing file" << std::endl;
+	std::cout << "SETFACL - changing or deleting the file access control list for an existing file" << std::endl;
 	std::cout << "CREDITS - displaying creators of the operation system" << std::endl;
 	std::cout << "EXIT - exiting from the operation system" << std::endl << std::endl << std::endl;
 	std::cout << "For further informations type: \"FUNCTION /?\"" << std::endl;
 	std::cout << "Example: CF /?" << std::endl;
 	std::cout << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
-	std::cout << std::endl << std::endl << std::endl;
+	std::cout << std::endl << std::endl;
 }
 void SHELL::boot() // wyswietlenie loga
 {

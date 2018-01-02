@@ -14,8 +14,9 @@ public:
 	void GROUPADD_H();
 	void GROUPDEL_H();
 	void SWITCHUSER_H();
-	void ADDTOGROUP_H();
+	void USERMOD_H();
 	void GETFACL_H();
+	void SETFACL_H();
 
 	/// MY
 	void HELP_F();

@@ -10,6 +10,7 @@ void HELP_CLASS::CREATEFILE_H()
 	std::cout << "\tparam2 - numbers of byte dedicated for the file." << std::endl;
 	std::cout << "\tparam3 - optionally text written into the file." << std::endl << std::endl;
 }
+
 void HELP_CLASS::READFILE_H()
 {
 	std::cout << "Usage: rf [param1]" << std::endl << std::endl;
@@ -63,9 +64,9 @@ void HELP_CLASS::SWITCHUSER_H()
 	std::cout << "\tparam2 - password, leave empty if an user doesn't have one" << std::endl << std::endl;
 }
 
-void HELP_CLASS::ADDTOGROUP_H()
+void HELP_CLASS::USERMOD_H()
 {
-	std::cout << "Usage: addtogroup [param1] [param2]" << std::endl << std::endl;
+	std::cout << "Usage: usermod [param1] [param2]" << std::endl << std::endl;
 	std::cout << "Options: " << std::endl;
 	std::cout << "\tparam1 - name of user you want to move." << std::endl;
 	std::cout << "\tparam2 - name of the group that you want to put an user in." << std::endl << std::endl;
@@ -76,6 +77,17 @@ void HELP_CLASS::GETFACL_H()
 	std::cout << "Usage: getfacl [param1]" << std::endl << std::endl;
 	std::cout << "Options: " << std::endl;
 	std::cout << "\tparam1 - name of the file that you want to check." << std::endl << std::endl;
+}
+
+void HELP_CLASS::SETFACL_H()
+{
+	std::cout << "Usage: setfacl -[param1] [param2]:[param3]:[param4] [param5]" << std::endl << std::endl;
+	std::cout << "Options: " << std::endl;
+	std::cout << "\tparam1 - m as modification, x as deleting." << std::endl;
+	std::cout << "\tparam2 - mark: u (user), g (group), m (mask), o (others),." << std::endl;
+	std::cout << "\tparam3 - name of the user or group." << std::endl;
+	std::cout << "\tparam4 - access right, 0-7 (R-4, W-2, X-1)." << std::endl;
+	std::cout << "\tparam5 - name of the file that you want to set the file access control list." << std::endl << std::endl;
 }
 
 
