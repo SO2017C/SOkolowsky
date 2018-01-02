@@ -354,7 +354,7 @@ void HDD::write_file(std::string file_to_write_name, std::string text_to_write, 
 						}
 						else {
 							if (text_size > 0) {//>= jesli pobiera bez \n
-								std::cout << "WPISUJE: " << text_to_write[text_to_write.size() - text_size] - 48 << "KONIEC\n";
+								//std::cout << "WPISUJE: " << text_to_write[text_to_write.size() - text_size] - 48 << "KONIEC\n";
 								data_container[actual_index_to_write*block_size + j] = text_to_write[text_to_write.size() - text_size];
 								text_size--;
 							}
@@ -365,7 +365,7 @@ void HDD::write_file(std::string file_to_write_name, std::string text_to_write, 
 					i = i + 2;
 				}
 
-				std::cout << "File was write successfully!\n";
+				std::cout << "File was wrote successfully!\n";
 			}
 			else {
 				std::cout << "Not enough space to write content to file (from indicator position to end of file)\n";

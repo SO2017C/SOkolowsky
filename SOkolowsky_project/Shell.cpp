@@ -129,7 +129,9 @@ void SHELL::switch_case()
 		}
 		else if (command_line.size() == 3 && are_there_numbers(command_line[2]))													// stworz plik bez tekstu
 		{
-			std::cout << "stworzono plik";
+			DISK.create_file(command_line[1], std::stoi(command_line[2]));
+			uprawnienia.stworzACL(command_line[1]);//TU IF CZY SIE UDALO STWORZYC!
+												   //uprawnienia.getfacl(command_line[1]);
 		}
 		else if (command_line.size() >= 4 && are_there_numbers(command_line[2]))													// stworz plik z tekstem
 		{
@@ -145,6 +147,7 @@ void SHELL::switch_case()
 			{
 
 				DISK.create_file(command_line[1], std::stoi(command_line[2]));
+				DISK.write_file(command_line[1], tekst, 0);
 				uprawnienia.stworzACL(command_line[1]);//TU IF CZY SIE UDALO STWORZYC!
 													   //uprawnienia.getfacl(command_line[1]);
 			}
