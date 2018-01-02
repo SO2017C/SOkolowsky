@@ -143,7 +143,7 @@ void SHELL::switch_case()
 			if (std::stoi(command_line[2]) >= tekst.size())
 			{
 
-				DISK.create_file(command_line[1], std::stoi(command_line[2]), tekst);
+				DISK.create_file(command_line[1], std::stoi(command_line[2]));
 				uprawnienia.stworzACL(command_line[1]);//TU IF CZY SIE UDALO STWORZYC!
 													   //uprawnienia.getfacl(command_line[1]);
 			}
