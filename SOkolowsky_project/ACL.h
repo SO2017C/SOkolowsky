@@ -95,6 +95,10 @@ public:
 
 	void deleteACL(std::string file_name);
 
+	void display_all_ACLs();
+
+	void delete_all_ACLs();
+
 	bool read_permission(std::string file_name);
 
 	bool write_permission(std::string file_name);

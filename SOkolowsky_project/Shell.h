@@ -10,7 +10,7 @@ private:
 	std::vector<std::string> command_line;						// vector w ktorym przechowujemy: FUNKCJE oraz n-parametrow
 	enum spis_funkcji {
 		CREATEFILE, READFILE, WRITEFILE, DELETEFILE, RENAMEFILE, FORMATDISK, DISPLAYDISK,
-		USERADD, USERDEL, DISPLAYUSERS, GROUPADD, GROUPDEL, DISPLAYGROUPS, SWITCHUSER, USERMOD, GETFACL, SETFACL,
+		USERADD, USERDEL, DISPLAYUSERS, GROUPADD, GROUPDEL, DISPLAYGROUPS, SWITCHUSER, USERMOD, GETFACL, SETFACL, DISPLAYACLS,
 		HELP, EXIT, OTHER, CREDITS
 	};			// enumerator w ktorym umieszcze wszystkie nazwy funkcji, wiadomo: CF = 0, RF = 1... etc.
 				// (ew jeszcze mamy OTHER, ktory wywoluje sie przy nieznalezieniu danej funkcji - przesylamy wiec to do interpretera)

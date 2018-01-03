@@ -18,11 +18,27 @@ void HELP_CLASS::READFILE_H()
 	std::cout << "\tparam1 - name of the file you want to read." << std::endl << std::endl;
 }
 
+void HELP_CLASS::WRITEFILE_H()
+{
+	std::cout << "Options: " << std::endl;
+	std::cout << "\tparam1 - name of the file you want write text in." << std::endl << std::endl;
+	std::cout << "\tparam2 - the text that will be written into  the file." << std::endl << std::endl;
+	std::cout << "\tparam3 - optionally an index asdf asd." << std::endl << std::endl;
+}
+
 void HELP_CLASS::DELETEFILE_H()
 {
 	std::cout << "Usage: rf [param1]" << std::endl << std::endl;
 	std::cout << "Options: " << std::endl;
 	std::cout << "\tparam1 - name of the file you want to delete." << std::endl << std::endl;
+}
+
+void HELP_CLASS::RENAMEFILE_H()
+{
+	std::cout << "Usage: rn [param1] [param2]" << std::endl << std::endl;
+	std::cout << "Options: " << std::endl;
+	std::cout << "\tparam1 - name of the file you want to change the name." << std::endl;
+	std::cout << "\tparam2 - new name of the file." << std::endl << std::endl;
 }
 
 

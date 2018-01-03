@@ -27,6 +27,7 @@ SHELL::spis_funkcji SHELL::str_to_int(const std::string & Funkcja)
 	else if (Funkcja == "USERMOD") return USERMOD;
 	else if (Funkcja == "GETFACL") return GETFACL;
 	else if (Funkcja == "SETFACL") return SETFACL;
+	else if (Funkcja == "DA") return DISPLAYACLS;
 	/// MY
 	else if (Funkcja == "HELP") return HELP;
 	else if (Funkcja == "CREDITS")return CREDITS;
@@ -203,7 +204,7 @@ void SHELL::switch_case()
 	{
 		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))				// help							
 		{
-			//help_class.WRITEFILE_H();
+			help_class.WRITEFILE_H();
 		}
 		else if (command_line.size() >= 3)													               // stworz plik z tekstem
 		{ // WF test troll
@@ -259,7 +260,7 @@ void SHELL::switch_case()
 			}
 			else
 			{
-				std::cout << "tu znowu w dupie" << std::endl;
+				std::cout << "aa" << std::endl;
 			}
 		}
 		else
@@ -273,7 +274,7 @@ void SHELL::switch_case()
 	{
 		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
 		{
-			//help_class.RENAMEFILE_H();
+			help_class.RENAMEFILE_H();
 		}
 		else if (command_line.size()==3)
 		{
@@ -290,6 +291,7 @@ void SHELL::switch_case()
 		if (command_line.size() == 1)
 		{
 			DISK.format_disk();
+			permissions.delete_all_ACLs();
 		}
 		else
 		{
@@ -437,10 +439,12 @@ void SHELL::switch_case()
 		else if (command_line.size() == 3)
 		{
 			permissions.log_out_and_in(command_line[1], command_line[2]);
+			system("cls");
 		}
 		else if (command_line.size() == 2)
 		{
 			permissions.log_out_and_in(command_line[1], "");
+			system("cls");
 		}
 		else
 		{
@@ -567,6 +571,19 @@ void SHELL::switch_case()
 
 		break;
 	}
+	case DISPLAYACLS:
+	{
+		if (command_line.size() == 1)
+		{
+			permissions.display_all_ACLs();
+		}
+		else
+		{
+			help_class.HELP_F();
+		}
+
+		break;
+	}
 	/// MY
 	case HELP:
 	{
@@ -605,23 +622,27 @@ void SHELL::help()
 	std::cout << "Available commands: " << std::endl;
 	std::cout << "CF - creating a new file" << std::endl;
 	std::cout << "RF - reading the content from an existing file" << std::endl;
+	std::cout << "WF - writing a content into an existing file" << std::endl;
 	std::cout << "DF - deleting an existing file" << std::endl;
+	std::cout << "RN - changing the name of an existing file" << std::endl;
+	std::cout << "FD - formatting the whole disk" << std::endl;
+	std::cout << "DD - displaying the informations of disk" << std::endl;
 	std::cout << "USERADD - creating a new user" << std::endl;
 	std::cout << "USERDEL - deleting an existing user" << std::endl;
-	std::cout << "DU - displaying all known users" << std::endl;
 	std::cout << "GROUPADD - creating a new empty group of users" << std::endl;
 	std::cout << "GROUPDEL - deleting an existing group of users" << std::endl;
+	std::cout << "DU - displaying all known users" << std::endl;
 	std::cout << "DG - displaying all known groups of users" << std::endl;
 	std::cout << "SU - switching to another available user" << std::endl;
-	std::cout << "ADDTOGROUP - adding an existing user to an existing group" << std::endl;
+	std::cout << "DA - displaying acls" << std::endl;
+	std::cout << "USERMOD - adding an existing user to an existing group" << std::endl;
 	std::cout << "GETFACL - getting the file access control list for an existing file" << std::endl;
 	std::cout << "SETFACL - changing or deleting the file access control list for an existing file" << std::endl;
 	std::cout << "CREDITS - displaying creators of the operation system" << std::endl;
 	std::cout << "EXIT - exiting from the operation system" << std::endl << std::endl << std::endl;
 	std::cout << "For further informations type: \"FUNCTION /?\"" << std::endl;
 	std::cout << "Example: CF /?" << std::endl;
-	std::cout << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
-	std::cout << std::endl << std::endl;
+	std::cout << std::endl << std::endl << std::endl << std::endl;
 }
 void SHELL::boot() // wyswietlenie loga
 {
@@ -707,8 +728,40 @@ void SHELL::are_you_sure()
 		letters_to_upper(pom);
 
 	if (pom[0] == 'Y' || pom == "YE" || pom == "YES")                                           // jesli bedzie na 100% pewny, to running = false - czyli wylaczamy system  
-	{                                                                                           // rowniez tutaj bedziemy musieli wszystkie zmienne dynamiczne usunac, zeby wyciekow pamieci nie bylo
-																								/*
+	{  
+		system("cls");
+		std::cout << "___________________$$$$$$______$$$$$$$$________________________________________________________________________________" << std::endl;
+		std::cout << "_________________$$______$$__$$______$$________________________________________________________________________________" << std::endl;
+		std::cout << "________________$$__________$$______$$_________________________________________________________________________________" << std::endl;
+		std::cout << "_______________$$__________$$______$$____$$______________________________________________________$$____________________" << std::endl;
+		std::cout << "________________$$$$$$____$$______$$____$$___$$__________$$_____________________________________$$___$$________________" << std::endl;
+		std::cout << "_____________________$$__$$______$$____$$_$$____$$$$$$__$$______$$$$$$__$$________$$___$$$$$$__$$_$$___________________" << std::endl;
+		std::cout << "____________________$$__$$______$$____$$$$_____$$__$$__$$______$$__$$___$$______$$___$$___$$__$$$$____$$____$$_________" << std::endl;
+		std::cout << "___________$$_____$$___$$______$$____$$__$$___$$__$$__$$______$$__$$____$$_$__$$_________$$__$$__$$____$$__$$__________" << std::endl;
+		std::cout << "____________$$$$$$______$$$$$$$$____$$____$$_$$$$$$__$$$$$$__$$$$$$_____$$__$$______$$$$$$__$$____$$____$$_____________" << std::endl;
+		std::cout << "_______________________________________________________________________________________________________$$______________" << std::endl;
+		std::cout << "_________$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$_______________" << std::endl;
+		std::cout << "_______________________________________________________________________________________________________________________" << std::endl;
+		std::cout << "                                                                             .                                         " << std::endl;
+		std::cout << "                                        `#.:`                            `+.#,;                                        " << std::endl;
+		std::cout << "                                       `+#+'+'`',                     '.;''++',                                        " << std::endl;
+		std::cout << "                                       ,+++'''''''                  ,;;'''''+#:                                        " << std::endl;
+		std::cout << "                                       .+#+''';;;;;:              ,;;;;;;''''',                                        " << std::endl;
+		std::cout << "                                       `++''''';;;;;::          ,:;;;;;;;''''+'                                        " << std::endl;
+		std::cout << "                                        ;++'''+'';;;;;;:  `.` ,:;;;;;;;''''++#`                                        " << std::endl;
+		std::cout << "                                        `,;'''';';;;;;;';;;;;;';;;;;;;';;''''.                                         " << std::endl;
+		std::cout << "                                         `:+'''''';;;;;;;';;';;;;;;;';;'';'+.                                          " << std::endl;
+		std::cout << "                                          `,++''';;';;;;;'''';''';''''';'+,.                                           " << std::endl;
+		std::cout << "                                            `,':+'';;;:;;';+;':;;';'''':,`                                             " << std::endl;
+		std::cout << "                                              ``.,:;;;,..;';;;``,,,,,.`                                                " << std::endl;
+		std::cout << "                                                   ``  .;':;:';;                                                       " << std::endl;
+		std::cout << "                                                      `';;:':;;;                                                       " << std::endl;
+		std::cout << "                                                       .+';';'+`                                                       " << std::endl;
+		std::cout << "                                                         `'+:.                                                         " << std::endl;
+		std::cout << "                                                          ```                                                          " << std::endl;
+
+		std::cout << "\t\t\t\t\t\t  Press enter to exit";
+		std::cin.ignore(1);																						/*
 																								usuwanie zmiennych dynamicznych - aby zapobiec wyciekom pamieci
 																								*/
 		running = false;                                                                        // gdyz po tej komendzie program sie wylaczy

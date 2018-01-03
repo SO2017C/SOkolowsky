@@ -488,6 +488,19 @@ void Permissions::deleteACL(std::string file_name) {
 
 }
 
+void Permissions::display_all_ACLs()
+{
+	for (auto z : ACL_container)
+	{
+		std::cout << z.first << "\n";
+	}
+}
+
+void Permissions::delete_all_ACLs()
+{
+	ACL_container.clear();
+}
+
 bool Permissions::read_permission(std::string file_name) {
 	bool others1 = false, others2 = false, others3 = false;
 	if (ACL_container.find(file_name) != ACL_container.end()) {

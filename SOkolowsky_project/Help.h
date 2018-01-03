@@ -6,7 +6,9 @@ public:
 	/// DYSK
 	void CREATEFILE_H();
 	void READFILE_H();
+	void WRITEFILE_H();
 	void DELETEFILE_H();
+	void RENAMEFILE_H();
 
 	/// ACL
 	void USERADD_H();
