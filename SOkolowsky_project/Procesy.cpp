@@ -1,10 +1,12 @@
-#pragma once
+
 #include "procesy.h"	
 
 unsigned int Free_pid = 2;
 
 //zmiana stanu procesu
-
+void PCB::Change_process_state2(Process_state x) {
+	State = x;
+}
 //stworzenie procesu
 void Tree::Fork(PCB * process, const std::string &name, MemoryManager &mm, const int &mem) {
 	//dodanie dziecka init'a
@@ -124,7 +126,7 @@ void Tree::Exit(const int &id, MemoryManager &mm, Pipeline &pip) {
 		int length = Children_list.size();
 		for (int i = 0; i < length; i++) {
 			//usuniecie dziecka jesli lista jego dzieci jest pusta
-			if (Children_list[i]->Pname.PID == id &&Children_list[i]->Children_list.size() == 0) {
+			if (Children_list[i]->Pname.PID == id && Children_list[i]->Children_list.size() == 0) {
 				//ogarnac usuwanie potoku jak go nie ma
 				pip.deletePipe(Children_list[i]->Pname);
 				Children_list.erase(Children_list.begin() + i);
@@ -203,7 +205,7 @@ void Tree::Exit_1(const int &id, MemoryManager &mm) {
 		int length = Children_list.size();
 		for (int i = 0; i < length; i++) {
 			//usuniecie dziecka jesli lista jego dzieci jest pusta
-			if (Children_list[i]->Pname.PID == id &&Children_list[i]->Children_list.size() == 0) {
+			if (Children_list[i]->Pname.PID == id && Children_list[i]->Children_list.size() == 0) {
 				Children_list.erase(Children_list.begin() + i);
 				//pip.deletePipe((Children_list.begin()+i)->Pname);
 				mm.Remove(id);
