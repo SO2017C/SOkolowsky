@@ -36,6 +36,8 @@ public:
 	int CPU;
 	int Command_counter;										//licznik rozkazow
 
+																//zmiana statusu procesu
+
 	PCB::PCB() {
 		this->State = New;
 		this->Priority = 10;
@@ -57,9 +59,6 @@ public:
 		this->Descriptor[1] = -1;
 	}
 	PCB::~PCB() {}
-
-	//zmiana statusu procesu
-	void Change_process_state(Process_state x);
 
 };
 
