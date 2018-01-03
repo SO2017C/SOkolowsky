@@ -261,7 +261,6 @@ void SHELL::switch_case()
 			if (permissions.user_exists(command_line[1]))
 			{
 				permissions.delete_user(command_line[1]);
-				std::cout << "User \"" << command_line[1] << "\" was deleted" << std::endl << std::endl;
 			}
 			else
 			{
@@ -315,7 +314,6 @@ void SHELL::switch_case()
 			if (permissions.group_exists(command_line[1]))
 			{
 				permissions.delete_group(command_line[1]);
-				std::cout << "Group \"" << command_line[1] << "\" was deleted" << std::endl << std::endl;
 			}
 			else
 			{

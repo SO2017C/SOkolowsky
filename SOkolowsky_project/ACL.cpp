@@ -89,6 +89,7 @@ void Permissions::delete_user(std::string name) {
 						}
 					}
 				}
+				std::cout << "User \"" << name << "\" was deleted" << std::endl << std::endl;
 			}
 			else std::cout << "\nCannot delete the logged in user\n\n";
 		}
@@ -141,6 +142,7 @@ void Permissions::delete_group(std::string name) {
 					}
 				}
 			}
+			std::cout << "Group \"" << name << "\" was deleted" << std::endl << std::endl;
 		}
 		else std::cout << "\nCannot delete built-in administrators and users accounts\n\n";
 	}
