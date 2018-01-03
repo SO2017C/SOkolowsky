@@ -6,7 +6,9 @@ unsigned int Free_pid = 2;
 //zmiana stanu procesu
 void PCB::Change_process_state(Process_state x) {
 	State = x;
+
 }
+
 //stworzenie procesu
 void Tree::Fork(PCB * process, const std::string &name, MemoryManager &mm, const int &mem) {
 	//dodanie dziecka init'a

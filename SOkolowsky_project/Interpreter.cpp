@@ -5,7 +5,7 @@
 #include "Procesy.h"
 #include "MemoryManager.h"
 #include "Planista.h"
-
+#include "Interpreter.h"
 
 
 extern class MemoryManager;
