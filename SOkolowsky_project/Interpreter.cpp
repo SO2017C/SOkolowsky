@@ -21,6 +21,7 @@ extern class Planista;
 class interpreter
 {
 public:
+
 	int PID;
 	int rejA;
 	int rejB;
