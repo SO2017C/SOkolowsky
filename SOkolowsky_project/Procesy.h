@@ -33,7 +33,7 @@ public:
 
 												
 																//zmiana statusu procesu
-	void Change_process_state2(Process_state x);
+	void Change_process_state(Process_state x);
 
 	PCB();
 

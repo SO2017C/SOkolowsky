@@ -37,7 +37,7 @@ std::string Pipe::read(unsigned int l)
 	{
 		if (buffer.empty())
 		{
-			//p2->Change_process_state2(Waiting); //TU POPRAWIC
+			//p2->Change_process_state(Waiting); //TU POPRAWIC
 		}
 		else
 		{

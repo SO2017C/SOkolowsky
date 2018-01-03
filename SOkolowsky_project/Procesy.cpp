@@ -2,7 +2,7 @@
 
 unsigned int Free_pid = 2;
 
-void PCB::Change_process_state2(Process_state x) {
+void PCB::Change_process_state(Process_state x) {
 	State = x;
 }
 
