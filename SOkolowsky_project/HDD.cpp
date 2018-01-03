@@ -1,5 +1,5 @@
 #include "HDD.h"
-//GLOBALNE123Eryk
+//GLOBALNE123Erykok
 
 
 
