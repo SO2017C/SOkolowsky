@@ -15,6 +15,7 @@ SHELL::spis_funkcji SHELL::str_to_int(const std::string & Funkcja)
 	else if (Funkcja == "DF") return DELETEFILE;
 	else if (Funkcja == "RN") return RENAMEFILE;
 	else if (Funkcja == "FD") return FORMATDISK;
+	else if (Funkcja == "DD") return DISPLAYDISK;
 	///ACL
 	else if (Funkcja == "USERADD") return USERADD;
 	else if (Funkcja == "USERDEL") return USERDEL;
@@ -202,7 +203,7 @@ void SHELL::switch_case()
 	{
 		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))				// help							
 		{
-			help_class.CREATEFILE_H();
+			//help_class.WRITEFILE_H();
 		}
 		else if (command_line.size() >= 3)													               // stworz plik z tekstem
 		{ // WF test troll
@@ -270,11 +271,43 @@ void SHELL::switch_case()
 	}
 	case RENAMEFILE:
 	{
-
+		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
+		{
+			//help_class.RENAMEFILE_H();
+		}
+		else if (command_line.size()==3)
+		{
+			DISK.rename_file(command_line[1], command_line[2]);
+		}
+		else
+		{
+			help_class.HELP_F();
+		}
+		break;
 	}
 	case FORMATDISK:
 	{
-
+		if (command_line.size() == 1)
+		{
+			DISK.format_disk();
+		}
+		else
+		{
+			help_class.HELP_F();
+		}
+		break;
+	}
+	case DISPLAYDISK:
+	{
+		if (command_line.size() == 1)
+		{
+			DISK.show_all_info();
+		}
+		else
+		{
+			help_class.HELP_F();
+		}
+		break;
 	}
 	/// ACL
 	case USERADD:

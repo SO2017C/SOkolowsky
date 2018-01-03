@@ -141,7 +141,7 @@ HDD::HDD() {
 	std::fstream HDD_file;
 	HDD_file.open("HDD_file.txt");
 	if (HDD_file.is_open() == true) {
-		std::cout << "Z PLIKU\n";
+		//std::cout << "Z PLIKU\n";
 		std::string actual_line;
 		getline(HDD_file, actual_line);
 		for (int i = 0; i < 1024; i++) { // loop which iterate through the bits
@@ -169,6 +169,7 @@ HDD::HDD() {
 }
 
 HDD::~HDD() {
+	save_to_file();
 }
 
 void HDD::create_file(std::string file_to_save_name, int file_to_save_size) {
