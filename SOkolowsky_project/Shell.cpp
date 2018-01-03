@@ -11,7 +11,10 @@ SHELL::spis_funkcji SHELL::str_to_int(const std::string & Funkcja)
 	///HDD
 	if (Funkcja == "CF") return CREATEFILE;
 	else if (Funkcja == "RF") return READFILE;
+	else if (Funkcja == "WF") return WRITEFILE;
 	else if (Funkcja == "DF") return DELETEFILE;
+	else if (Funkcja == "RN") return RENAMEFILE;
+	else if (Funkcja == "FD") return FORMATDISK;
 	///ACL
 	else if (Funkcja == "USERADD") return USERADD;
 	else if (Funkcja == "USERDEL") return USERDEL;
@@ -47,6 +50,13 @@ bool SHELL::are_there_numbers(const std::string &s)
 	}
 	return true;
 }
+bool SHELL::is_there_number(const char & c)
+{
+	if (c < 48 || c>57)
+		return false;
+	else
+		return true;
+}
 void SHELL::segregate()
 {
 	if (are_there_numbers(command_line[1])) // jesli cyfry sa w drugim miejscu command_line (przyp. 1 - funkcja, 2 - parametr, 3 paramter), to przekladamy je na trzecie miejsce
@@ -75,7 +85,7 @@ void SHELL::command()
 	std::string zdanie;
 	std::getline(std::cin, zdanie);                                 // pobranie linijki wypisanej przez uzytkownika
 	std::smatch sm;
-	std::regex regex("[a-zA-Z0-9_!@#$%*^&()\\[\\]+-={}';.,/?]+|[1-9][0-9]*");   // minimum 1 literka, string zaczyna sie od obojetnie czego
+	std::regex regex("[a-zA-Z0-9_!@#$%\"*^&()\\[\\]+-={}';.,/?]+|[1-9][0-9]*");   // minimum 1 literka, string zaczyna sie od obojetnie czego
 																				// liczba zaczyna sie od 1: czyli nie mo¿na zrobiæ 001 - wlasciwie to uzytkownik moze to wpisac, ale my zobaczymy tylko 1...
 																				// no i nasz parametr specjalny: /? (wywolanie pomocy)
 
@@ -188,6 +198,52 @@ void SHELL::switch_case()
 
 		break;
 	}
+	case WRITEFILE:
+	{
+		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))				// help							
+		{
+			help_class.CREATEFILE_H();
+		}
+		else if (command_line.size() >= 3)													               // stworz plik z tekstem
+		{ // WF test troll
+			std::string tekst;
+			// if ma uprawnienia
+			for (int i = 2; i < command_line.size(); i++)
+			{
+				if (i == command_line.size() - 1)
+					tekst += command_line[i];
+				else
+					tekst += command_line[i] += ' ';
+			}
+
+			if (is_there_number(tekst.at(tekst.size() - 1))) // jesli jest wskaznik
+			{
+				if (tekst.at(0) == '"'&&tekst.at(tekst.size() - 2))
+				{
+					char liczba = tekst[tekst.size() - 1];
+					std::string wpisz(tekst.begin() + 1, tekst.end() - 3);
+					DISK.write_file(command_line[1], wpisz, liczba-48);
+				}
+			}
+			else // bez wskaznika
+			{
+				std::string wpisz(tekst.begin() + 1, tekst.end() - 1);
+				DISK.write_file(command_line[1], wpisz, 0);
+			}
+
+			//else
+			//{
+			//	std::cout << "File couldn't be created." << std::endl;
+			//	std::cout << "The amount of characters you typed," << std::endl;
+			//	std::cout << "exceeded the amount that disk dedicated for that file" << std::endl;
+			//}
+		}
+		else
+		{
+			help_class.HELP_F();
+		}
+		break;
+	}
 	case DELETEFILE:
 	{
 		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
@@ -211,6 +267,14 @@ void SHELL::switch_case()
 		}
 
 		break;
+	}
+	case RENAMEFILE:
+	{
+
+	}
+	case FORMATDISK:
+	{
+
 	}
 	/// ACL
 	case USERADD:
@@ -385,7 +449,7 @@ void SHELL::switch_case()
 
 		break;
 	}
-	case SETFACL: // pora¿ka totalna ||| setfacl[0] -m[1] u:user:7[2] test[3]
+	case SETFACL: // porazka totalna ||| setfacl[0] -m[1] u:user:7[2] / m:2 test[3]
 	{
 		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
 		{
@@ -393,10 +457,11 @@ void SHELL::switch_case()
 		}
 		else if (command_line.size() == 4 &&
 			(command_line[1] == "-m" || command_line[1] == "-x") &&
-			(command_line[2].at(0) == 'u' || command_line[2].at(0) == 'g' || command_line[2].at(0) == 'm' || command_line[2].at(0) == 'o')
+			(command_line[2].at(0) == 'u' || command_line[2].at(0) == 'g')
 			)
 		{
 			int licznik = 0;
+			// todo: bez sensu, zmien
 			for (int i = 0; i < command_line[2].size(); i++)
 			{
 				if (command_line[2].at(i) == ':') licznik++;
@@ -408,7 +473,8 @@ void SHELL::switch_case()
 				if (command_line[2].at(poz_dwu) == ':')
 				{
 
-					if (command_line[2].at(command_line[2].size() - 1) == '1' ||
+					if (command_line[2].at(command_line[2].size() - 1) == '0' ||
+						command_line[2].at(command_line[2].size() - 1) == '1' ||
 						command_line[2].at(command_line[2].size() - 1) == '2' ||
 						command_line[2].at(command_line[2].size() - 1) == '3' ||
 						command_line[2].at(command_line[2].size() - 1) == '4' ||
@@ -426,6 +492,34 @@ void SHELL::switch_case()
 					{
 						help_class.HELP_F();
 					}
+				}
+				else
+				{
+					help_class.HELP_F();
+				}
+			}
+		}
+		else if (command_line.size() == 4 &&
+			(command_line[1] == "-m" || command_line[1] == "-x") &&
+			(command_line[2].at(0) == 'm' || command_line[2].at(0) == 'o')
+			)
+		{// pora?ka totalna ||| setfacl[0] -m[1] u:user:7[2] / m:2 test[3]
+			if (command_line[2].at(command_line[2].size() - 2) == ':')
+			{
+				if (command_line[2].at(command_line[2].size() - 1) == '0' ||
+					command_line[2].at(command_line[2].size() - 1) == '1' ||
+					command_line[2].at(command_line[2].size() - 1) == '2' ||
+					command_line[2].at(command_line[2].size() - 1) == '3' ||
+					command_line[2].at(command_line[2].size() - 1) == '4' ||
+					command_line[2].at(command_line[2].size() - 1) == '5' ||
+					command_line[2].at(command_line[2].size() - 1) == '6' ||
+					command_line[2].at(command_line[2].size() - 1) == '7'
+					)
+
+				{
+					char right = command_line[2].at(command_line[2].size() - 1);
+					command_line[2].resize(command_line[2].size() - 2);
+					permissions.setfacl(command_line[1].at(1), command_line[2], right, command_line[3]);
 				}
 				else
 				{

@@ -9,7 +9,7 @@ private:
 	bool running;												// zmienna ktora sprawia, ze petla jest true, wiec dopki ktos nie wpisze "EXIT" to shell bedzie dzialal
 	std::vector<std::string> command_line;						// vector w ktorym przechowujemy: FUNKCJE oraz n-parametrow
 	enum spis_funkcji {
-		CREATEFILE, READFILE, DELETEFILE,
+		CREATEFILE, READFILE, WRITEFILE, DELETEFILE, RENAMEFILE, FORMATDISK,
 		USERADD, USERDEL, DISPLAYUSERS, GROUPADD, GROUPDEL, DISPLAYGROUPS, SWITCHUSER, USERMOD, GETFACL, SETFACL,
 		HELP, EXIT, OTHER, CREDITS
 	};			// enumerator w ktorym umieszcze wszystkie nazwy funkcji, wiadomo: CF = 0, RF = 1... etc.
@@ -27,6 +27,7 @@ private:
 	spis_funkcji str_to_int(const std::string & Funkcja);		// funkcja ktora przyjmuje wartosc STRING, oraz na jej podstawie zwraca liczbê, dzieki temu moge uzywac switch -> case
 	bool are_there_letters(const std::string &s);				// sprawdzam czy w danym stringu sa znaki specjalne / liczby	||||| wtedy nie przyjmujemy go (zwracamy false)
 	bool are_there_numbers(const std::string &s);				// sprawdzamy czy w danym stringu sa litery / znaki specjalne	||||| wtedy nie przyjmujemy go (zwracamy false)
+	bool is_there_number(const char &c);
 	void segregate();											// jezeli mamy 3 parametry i wsrod nich sa dane liczbowe, to wtedy umieszczamy je na 3 miejscu
 	void SHELL::letters_to_upper(std::string &s);				// zmieniamy literki, np. aBcdEfGHiJ tak aby wszystkie byly wielkie -> ABCDEFGHIJ
 
