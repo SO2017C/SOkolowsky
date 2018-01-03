@@ -1,4 +1,4 @@
-#include "Shell.h"
+ï»¿#include "Shell.h"
 
 
 
@@ -33,7 +33,7 @@ bool SHELL::are_there_letters(const std::string &s)
 {
 	for (unsigned int i = 0; i < s.size(); i++)
 	{
-		if (s[i] < 65 || s[i] >= 91 && s[i] <= 96 || s[i]>123) // Odsy³am do tabeli ASCII
+		if (s[i] < 65 || s[i] >= 91 && s[i] <= 96 || s[i]>123) // OdsyÂ³am do tabeli ASCII
 			return false;
 	}
 	return true;
@@ -42,7 +42,7 @@ bool SHELL::are_there_numbers(const std::string &s)
 {
 	for (unsigned int i = 0; i < s.size(); i++)
 	{
-		if (s[i] < 48 || s[i]>57)// Odsy³am do tabeli ASCII
+		if (s[i] < 48 || s[i]>57)// OdsyÂ³am do tabeli ASCII
 			return false;
 	}
 	return true;
@@ -60,60 +60,60 @@ void SHELL::letters_to_upper(std::string &s)
 /* POBIERANIE DANYCH ORAZ PRZESYLANIE DALEJ */
 //void login()
 //{
-//	std::string login, haslo;
-//	while (true)
-//	{
-//		std::cout << "Podaj login: "; std::cin >> login;
-//		std::cout << "Podaj haslo: "; std::cin >> haslo;
-//		uprawnienia.przelacz_uzytkownika(login, haslo);
-//	
-//	}
+//  std::string login, haslo;
+//  while (true)
+//  {
+//      std::cout << "Podaj login: "; std::cin >> login;
+//      std::cout << "Podaj haslo: "; std::cin >> haslo;
+//      uprawnienia.przelacz_uzytkownika(login, haslo);
+// 
+//  }
 //}
 void SHELL::command()
 {
 
 	std::string zdanie;
-	std::getline(std::cin, zdanie);									// pobranie linijki wypisanej przez uzytkownika
+	std::getline(std::cin, zdanie);                                 // pobranie linijki wypisanej przez uzytkownika
 	std::smatch sm;
-	std::regex regex("[a-zA-Z0-9_!@#$%*^&()\\[\\]+-={}';.,/?]+|[1-9][0-9]*");	// minimum 1 literka, string zaczyna sie od obojetnie czego
-																				// liczba zaczyna sie od 1: czyli nie mo¿na zrobiæ 001 - wlasciwie to uzytkownik moze to wpisac, ale my zobaczymy tylko 1...
+	std::regex regex("[a-zA-Z0-9_!@#$%*^&()\\[\\]+-={}';.,/?]+|[1-9][0-9]*");   // minimum 1 literka, string zaczyna sie od obojetnie czego
+																				// liczba zaczyna sie od 1: czyli nie moÂ¿na zrobiÃ¦ 001 - wlasciwie to uzytkownik moze to wpisac, ale my zobaczymy tylko 1...
 																				// no i nasz parametr specjalny: /? (wywolanie pomocy)
 
-	while (std::regex_search(zdanie, sm, regex))					// za pomoca wyrazenia regularnego wyfiltrowanie rzeczy, ktore wypisal uzytkownik
+	while (std::regex_search(zdanie, sm, regex))                    // za pomoca wyrazenia regularnego wyfiltrowanie rzeczy, ktore wypisal uzytkownik
 	{
 		command_line.push_back(sm.str());
 		zdanie = sm.suffix();
 	}
-	if (command_line.size() < 1)									// jesli ktos podal zdanie zawierajacy tylko: " \ / | % ! - = * +, to wtedy size jest rowny 0, gdyz regex go nie wylapie
+	if (command_line.size() < 1)                                    // jesli ktos podal zdanie zawierajacy tylko: " \ / | % ! - = * +, to wtedy size jest rowny 0, gdyz regex go nie wylapie
 	{
-		std::cout << uprawnienia.zwroc_zalogowanego_uzytkownika().name << "::> ";
+		std::cout << permissions.return_log_in_user_name().name << "::> ";
 		command_line.clear();
 	}
-	else if (are_there_letters(command_line[0]))					// jesli w pierwszym wyrazie sa literki
+	else if (are_there_letters(command_line[0]))                    // jesli w pierwszym wyrazie sa literki
 	{
-		letters_to_upper(command_line[0]);							// zmieniamy je na duze litery: cF -> CF / cf -> CF
-		if (command_line.size() == 3)								// rowniez jesli wielkosc komendy jest rowna 3
-			segregate();											// segregujemy, tak ze int zawsze jest na 3 pozycji --- wytlumaczenie: ping -n 10 8.8.8.8 == ping 8.8.8.8 -n 10 | 
-	}																// w CMD kolejnosc nie ma znaczenia, rowniez chcialem aby moj shell byl podobny
-	else															// jezeli ktos wpisze np. tylko: ";)" "$$" to wtedy command_line.size() == 0, czyli wywolujemy ze ma podac w 1. parametrze funkcje
+		letters_to_upper(command_line[0]);                          // zmieniamy je na duze litery: cF -> CF / cf -> CF
+		if (command_line.size() == 3)                               // rowniez jesli wielkosc komendy jest rowna 3
+			segregate();                                            // segregujemy, tak ze int zawsze jest na 3 pozycji --- wytlumaczenie: ping -n 10 8.8.8.8 == ping 8.8.8.8 -n 10 |
+	}                                                               // w CMD kolejnosc nie ma znaczenia, rowniez chcialem aby moj shell byl podobny
+	else                                                            // jezeli ktos wpisze np. tylko: ";)" "$$" to wtedy command_line.size() == 0, czyli wywolujemy ze ma podac w 1. parametrze funkcje
 	{
 		error_r();
-		std::cout << uprawnienia.zwroc_zalogowanego_uzytkownika().name << "::> ";
+		std::cout << permissions.return_log_in_user_name().name << "::> ";
 		command_line.clear();
 	}
 }
 void SHELL::run()
 {
 	do {
-		std::cout << uprawnienia.zwroc_zalogowanego_uzytkownika().name << "::> ";									 // wypisanie naszego "znaku poczatku komendy" - czy jak to nazwac
-		command_line.clear();									 // wyczyszczenie command_line z poprzedniej komendy (tej ktora zostala wykonana)
-		while (command_line.size() <= 0)						 // jezeli ktos podal np. "||" jako nazwe funkcji, to petla sie powtarza lub jesli sa jakies nieprawidlowe parametry
+		std::cout << permissions.return_log_in_user_name().name << "::> ";                                   // wypisanie naszego "znaku poczatku komendy" - czy jak to nazwac
+		command_line.clear();                                    // wyczyszczenie command_line z poprzedniej komendy (tej ktora zostala wykonana)
+		while (command_line.size() <= 0)                         // jezeli ktos podal np. "||" jako nazwe funkcji, to petla sie powtarza lub jesli sa jakies nieprawidlowe parametry
 		{
-			command();											 // wywolanie funkcji pobierajacej komende od uzytkownika
+			command();                                           // wywolanie funkcji pobierajacej komende od uzytkownika
 		}
-		switch_case();											 // w przypadku komendy, ktora wydaje sie w miare "poprawna" wywolujemy switch_case()
+		switch_case();                                           // w przypadku komendy, ktora wydaje sie w miare "poprawna" wywolujemy switch_case()
 
-	} while (running);											 // program bedzie sie wykonywal w nieskonczonosc dopoki uzytkownik go nie przerwie
+	} while (running);                                           // program bedzie sie wykonywal w nieskonczonosc dopoki uzytkownik go nie przerwie
 }
 void SHELL::switch_case()
 {
@@ -130,7 +130,7 @@ void SHELL::switch_case()
 		else if (command_line.size() == 3 && are_there_numbers(command_line[2]))													// stworz plik bez tekstu
 		{
 			DISK.create_file(command_line[1], std::stoi(command_line[2]));
-			uprawnienia.stworzACL(command_line[1]);//TU IF CZY SIE UDALO STWORZYC!
+			permissions.createACL(command_line[1]);//TU IF CZY SIE UDALO STWORZYC!
 												   //uprawnienia.getfacl(command_line[1]);
 		}
 		else if (command_line.size() >= 4 && are_there_numbers(command_line[2]))													// stworz plik z tekstem
@@ -148,7 +148,7 @@ void SHELL::switch_case()
 
 				DISK.create_file(command_line[1], std::stoi(command_line[2]));
 				DISK.write_file(command_line[1], tekst, 0);
-				uprawnienia.stworzACL(command_line[1]);//TU IF CZY SIE UDALO STWORZYC!
+				permissions.createACL(command_line[1]);//TU IF CZY SIE UDALO STWORZYC!
 													   //uprawnienia.getfacl(command_line[1]);
 			}
 			else
@@ -172,12 +172,12 @@ void SHELL::switch_case()
 		}
 		else if (command_line.size() == 2)
 		{
-			if (uprawnienia.zgoda_na_odczyt(command_line[1]) == true) {
+			if (permissions.read_permission(command_line[1]) == true) {
 				std::cout << DISK.read_file(command_line[1]) << std::endl;
 			}
 			else
 			{
-				std::cout << "User \"" << uprawnienia.zwroc_zalogowanego_uzytkownika().name << "\" does not have permissions to read that file" << std::endl;
+				std::cout << "User \"" << permissions.return_log_in_user_name().name << "\" does not have permissions to read that file" << std::endl;
 			}
 
 		}
@@ -196,9 +196,9 @@ void SHELL::switch_case()
 		}
 		else if (command_line.size() == 2)
 		{
-			if (uprawnienia.zgoda_na_usuniecie(command_line[1]) == true) {
+			if (permissions.exec_permission(command_line[1]) == true) {
 				DISK.delete_file(command_line[1]);
-				uprawnienia.deleteACL(command_line[1]);
+				permissions.deleteACL(command_line[1]);
 			}
 			else
 			{
@@ -221,9 +221,9 @@ void SHELL::switch_case()
 		}
 		else if (command_line.size() == 3)
 		{
-			if (uprawnienia.uzytkownik_istnieje(command_line[1]) == false)
+			if (permissions.user_exists(command_line[1]) == false)
 			{
-				uprawnienia.dodaj_uzytkownika(command_line[1], command_line[2]);
+				permissions.add_user(command_line[1], command_line[2]);
 				std::cout << "The user \"" << command_line[1] << "\" has been successfully created." << std::endl << std::endl;
 			}
 			else
@@ -234,9 +234,9 @@ void SHELL::switch_case()
 		}
 		else if (command_line.size() == 2)
 		{
-			if (uprawnienia.uzytkownik_istnieje(command_line[1]) == false)
+			if (permissions.user_exists(command_line[1]) == false)
 			{
-				uprawnienia.dodaj_uzytkownika(command_line[1], "");
+				permissions.add_user(command_line[1], "");
 				std::cout << "The user \"" << command_line[1] << "\" has been successfully added." << std::endl << std::endl;
 			}
 			else
@@ -258,9 +258,9 @@ void SHELL::switch_case()
 		}
 		else if (command_line.size() == 2)
 		{
-			if (uprawnienia.uzytkownik_istnieje(command_line[1]))
+			if (permissions.user_exists(command_line[1]))
 			{
-				uprawnienia.usun_uzytkownika(command_line[1]);
+				permissions.delete_user(command_line[1]);
 				std::cout << "User \"" << command_line[1] << "\" was deleted" << std::endl << std::endl;
 			}
 			else
@@ -276,7 +276,7 @@ void SHELL::switch_case()
 	}
 	case DISPLAYUSERS:
 	{
-		uprawnienia.wyswietl_uzytkownikow();
+		permissions.display_users();
 		break;
 	}
 	case GROUPADD:
@@ -287,9 +287,9 @@ void SHELL::switch_case()
 		}
 		if (command_line.size() == 2)
 		{
-			if (uprawnienia.uzytkownik_istnieje(command_line[1]) == false)
+			if (permissions.group_exists(command_line[1]) == false)
 			{
-				uprawnienia.dodaj_grupe(command_line[1]);
+				permissions.add_group(command_line[1]);
 				std::cout << "The group \"" << command_line[1] << "\" has been successfully created." << std::endl << std::endl;
 			}
 			else
@@ -312,9 +312,9 @@ void SHELL::switch_case()
 		}
 		if (command_line.size() == 2)
 		{
-			if (uprawnienia.grupa_istnieje(command_line[1]))
+			if (permissions.group_exists(command_line[1]))
 			{
-				uprawnienia.usun_grupe(command_line[1]);
+				permissions.delete_group(command_line[1]);
 				std::cout << "Group \"" << command_line[1] << "\" was deleted" << std::endl << std::endl;
 			}
 			else
@@ -330,7 +330,7 @@ void SHELL::switch_case()
 	}
 	case DISPLAYGROUPS:
 	{
-		uprawnienia.wyswietl_grupy();
+		permissions.display_groups();
 		break;
 	}
 	case SWITCHUSER:
@@ -341,11 +341,11 @@ void SHELL::switch_case()
 		}
 		else if (command_line.size() == 3)
 		{
-			uprawnienia.przelacz_uzytkownika(command_line[1], command_line[2]);
+			permissions.log_out_and_in(command_line[1], command_line[2]);
 		}
 		else if (command_line.size() == 2)
 		{
-			uprawnienia.przelacz_uzytkownika(command_line[1], "");
+			permissions.log_out_and_in(command_line[1], "");
 		}
 		else
 		{
@@ -361,7 +361,7 @@ void SHELL::switch_case()
 		}
 		else if (command_line.size() == 3)
 		{
-			uprawnienia.dodaj_do_grupy(command_line[1], command_line[2]);
+			permissions.add_to_group(command_line[1], command_line[2]);
 		}
 		else
 		{
@@ -378,7 +378,7 @@ void SHELL::switch_case()
 		}
 		else if (command_line.size() == 2)
 		{
-			uprawnienia.getfacl(command_line[1]);
+			permissions.getfacl(command_line[1]);
 		}
 		else
 		{
@@ -387,7 +387,7 @@ void SHELL::switch_case()
 
 		break;
 	}
-	case SETFACL: // pora¿ka totalna ||| setfacl[0] -m[1] u:user:7[2] test[3]
+	case SETFACL: // poraÂ¿ka totalna ||| setfacl[0] -m[1] u:user:7[2] test[3]
 	{
 		if (command_line.size() == 1 || (command_line.size() == 2 && command_line[1] == "/?"))
 		{
@@ -409,7 +409,7 @@ void SHELL::switch_case()
 				int poz_dwu = command_line[2].size() - 2; // u:jan:7 command_line.size()-2 -> ':'
 				if (command_line[2].at(poz_dwu) == ':')
 				{
-					
+
 					if (command_line[2].at(command_line[2].size() - 1) == '1' ||
 						command_line[2].at(command_line[2].size() - 1) == '2' ||
 						command_line[2].at(command_line[2].size() - 1) == '3' ||
@@ -422,7 +422,7 @@ void SHELL::switch_case()
 					{
 						char right = command_line[2].at(command_line[2].size() - 1);
 						command_line[2].resize(command_line[2].size() - 2);
-						uprawnienia.setfacl(command_line[1].at(1), command_line[2], right, command_line[3]);
+						permissions.setfacl(command_line[1].at(1), command_line[2], right, command_line[3]);
 					}
 					else
 					{
@@ -459,8 +459,8 @@ void SHELL::switch_case()
 		break;
 	}
 	case OTHER:
-	{																												// interpreter.COSTAM(command_line);
-		error_r();																									// jezeli nie, to wywoluje metode error_r();
+	{                                                                                                               // interpreter.COSTAM(command_line);
+		error_r();                                                                                                  // jezeli nie, to wywoluje metode error_r();
 		break;
 	}
 
@@ -557,13 +557,13 @@ void SHELL::exit()
 {
 	std::string pom;
 
-	std::cout << "Czy na pewno chcesz opuscic? [Yes/No]: "; std::getline(std::cin, pom);					// pobranie linijki
-	if (are_there_letters(pom))																				// jesli podal literki, to zmieniamy je na wielkie litery
+	std::cout << "Czy na pewno chcesz opuscic? [Yes/No]: "; std::getline(std::cin, pom);                    // pobranie linijki
+	if (are_there_letters(pom))                                                                             // jesli podal literki, to zmieniamy je na wielkie litery
 		letters_to_upper(pom);
 
-	if (pom[0] == 'Y' || pom == "YE" || pom == "YES")														// jesli uzytkownik zdecyduje sie wyjsc, wyswietlamy ponowne zapytanie
-	{																										// w windowsie zauwazylem, ze niewazne czy napiszemy "Y" / "YE" / "YES" to zawsze 
-		are_you_sure();																						// dane zapytanie zakonczy sie pozytywnie
+	if (pom[0] == 'Y' || pom == "YE" || pom == "YES")                                                       // jesli uzytkownik zdecyduje sie wyjsc, wyswietlamy ponowne zapytanie
+	{                                                                                                       // w windowsie zauwazylem, ze niewazne czy napiszemy "Y" / "YE" / "YES" to zawsze
+		are_you_sure();                                                                                     // dane zapytanie zakonczy sie pozytywnie
 	}
 	else if (pom[0] == 'N' || pom == "NO")
 	{
@@ -571,7 +571,7 @@ void SHELL::exit()
 	}
 	else
 	{
-		exit();																								// jezeli uzytkownik wpisze cokolwiek innego, np. $ / B  itp, to ponawiamy zapytanie
+		exit();                                                                                             // jezeli uzytkownik wpisze cokolwiek innego, np. $ / B  itp, to ponawiamy zapytanie
 	}
 }
 void SHELL::are_you_sure()
@@ -581,12 +581,12 @@ void SHELL::are_you_sure()
 	if (are_there_letters(pom))
 		letters_to_upper(pom);
 
-	if (pom[0] == 'Y' || pom == "YE" || pom == "YES")											// jesli bedzie na 100% pewny, to running = false - czyli wylaczamy system  
-	{																							// rowniez tutaj bedziemy musieli wszystkie zmienne dynamiczne usunac, zeby wyciekow pamieci nie bylo
+	if (pom[0] == 'Y' || pom == "YE" || pom == "YES")                                           // jesli bedzie na 100% pewny, to running = false - czyli wylaczamy system  
+	{                                                                                           // rowniez tutaj bedziemy musieli wszystkie zmienne dynamiczne usunac, zeby wyciekow pamieci nie bylo
 																								/*
 																								usuwanie zmiennych dynamicznych - aby zapobiec wyciekom pamieci
 																								*/
-		running = false;																		// gdyz po tej komendzie program sie wylaczy
+		running = false;                                                                        // gdyz po tej komendzie program sie wylaczy
 	}
 	else if (pom[0] == 'N' || pom == "NO")
 	{
@@ -594,7 +594,7 @@ void SHELL::are_you_sure()
 	}
 	else
 	{
-		are_you_sure();																			// jezeli uzytkownik wpisze cokolwiek innego, np. $ / B  itp, to ponawiamy zapytanie
+		are_you_sure();                                                                         // jezeli uzytkownik wpisze cokolwiek innego, np. $ / B  itp, to ponawiamy zapytanie
 	}
 }
 
@@ -611,11 +611,3 @@ SHELL::SHELL()
 
 
 //"[a-zA-Z_!@#$%^&()+-={}';.,][a-zA-Z0-9_!@#$%^&()+-={}';.,]*
-
-
-
-
-
-
-
-

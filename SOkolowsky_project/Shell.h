@@ -19,7 +19,7 @@ private:
 
 	/*DEKLARACJE INNYCH MODU£ÓW*/
 	HDD DISK;
-	Uprawnienia uprawnienia;
+	Permissions permissions;
 	/*DEKLARACJE INNYCH MODU£ÓW*/
 
 
