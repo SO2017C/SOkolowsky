@@ -1,12 +1,33 @@
-
 #include "procesy.h"	
 
 unsigned int Free_pid = 2;
 
-//zmiana stanu procesu
 void PCB::Change_process_state2(Process_state x) {
 	State = x;
 }
+
+PCB::PCB() {
+	this->State = New;
+	this->Priority = 10;
+	this->Descriptor[0] = -1;
+	this->Descriptor[1] = -1;
+	this->Reg1 = 0;
+	this->Reg2 = 0;
+	this->Reg3 = 0;
+	this->Reg4 = 0;
+	this->CPU = 0;
+	this->Command_counter = 0;
+}
+
+PCB::PCB(int a) {
+	this->PID = a;
+	this->State = Ready;
+	this->Priority = 31;
+	this->Descriptor[0] = -1;
+	this->Descriptor[1] = -1;
+}
+
+PCB::~PCB() {}
 //stworzenie procesu
 void Tree::Fork(PCB * process, const std::string &name, MemoryManager &mm, const int &mem) {
 	//dodanie dziecka init'a
