@@ -1,7 +1,7 @@
 #include "Shell.h"
 #include "HDD.h"
 
-//MAIN
+//MAIN DOBRA
 int main() {
 	SHELL shell;
 }
