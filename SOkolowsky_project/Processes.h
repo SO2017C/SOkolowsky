@@ -1,9 +1,12 @@
-#pragma once
+#ifndef Processes_h
+#define Processes_h
+
 #include "Biblioteki.h"
 #include "Pipeline.h"
 #include "MemoryManager.h"
 
-//extern class Pipeline;
+extern class Pipeline;
+
 class Tree;
 
 class PCB{
@@ -47,3 +50,4 @@ public:
 	PCB Get_process_1(const std::string &proces_name);
 	std::vector<PCB>Ready_processes();
 };
+#endif

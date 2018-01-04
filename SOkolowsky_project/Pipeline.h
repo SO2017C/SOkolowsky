@@ -1,13 +1,11 @@
-#pragma once
-#include <queue>
-#include <string>
-#include <array>
-#include <vector>
-#include <iostream>
+#ifndef Pipeline_h
+#define Pipeline_h
+#include "Biblioteki.h"
 #include "Processes.h"
 #include "Synchronization.h"
 
-//extern class PCB;
+extern class PCB;
+
 class Pipe;
 
 class Pipeline
@@ -19,11 +17,9 @@ public:
 	bool Pipe_exist(PCB& p1, PCB &p2);
 	std::vector<Pipe*> pipes;   //wektor przechowujπcy wszystkie aktywne potoki
 
-private:
-
 };
 
-struct Pipe
+class Pipe
 {
 public:
 	Pipe(PCB& p1, PCB& p2, Pipeline& pl);
@@ -36,3 +32,4 @@ private:
 	PCB  *p2;   //wskaünik na proces odczytujπcy
 	Pipeline *pl;   //wskaünik do klasy nadrzÍdnej
 };
+#endif

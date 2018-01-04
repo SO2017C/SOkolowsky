@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MemoryManager_h
+#define MemoryManager_h
 #include "Biblioteki.h"
 //#include "Processes.h"
 //extern class PCB;
@@ -83,4 +84,4 @@ public:
 
 	//~MemoryManager();
 }
-
+#endif
