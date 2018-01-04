@@ -135,7 +135,8 @@ int Planista::get_C()
 {
 	return running.Reg3;
 }
-int get_PID()
+
+int Planista::get_PID()
 {
 	return running.PID;
 }

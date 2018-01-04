@@ -7,11 +7,7 @@ extern class Pipeline;
 extern class Tree;
 extern class Planista;
 
-
-
-
-class interpreter
-{
+class interpreter{
 public:
 	int PID;
 	int rejA;
@@ -20,20 +16,16 @@ public:
 	int rejD;
 	int liczRoz;
 
-
-	interpreter()
-	{
+	interpreter(){
 		PID = 0;
 		rejA = 0;
 		rejB = 0;
 		rejC = 0;
 		rejD = 0;
 		liczRoz = 0;
-
 	}
 
-	void PobierzRejestry(Planista &planista, PCB &pcb, Tree &tree)  //pobieranie rejestrów z procesu który jest w stanie running
-	{
+	void PobierzRejestry(Planista &planista, PCB &pcb, Tree &tree){ //pobieranie rejestrów z procesu który jest w stanie running
 
 		//planista.check(pcb, tree); //ustawianie procesu running
 		PID = pcb.PID;
@@ -63,7 +55,7 @@ public:
 		pcb.Reg2 = rejB;
 		pcb.Reg3 = rejC;
 		pcb.Command_counter = liczRoz;
-
+		pcb.CPU+=liczRoz;
 	}
 
 	std::string pobierzRozkaz(MemoryManager &mm, PCB &pcb)
@@ -443,8 +435,6 @@ public:
 		}
 
 
-
-
 		/////////////////////////////// pobieranie wartosci z pamici
 
 		if (operacja == "MV")
@@ -474,48 +464,6 @@ public:
 
 		}
 
-		///////////////////zapis rej do pamieci
-
-		/*if (operacja == "MX")
-		{
-
-		rej1 = pobierzRozkaz(mm, pcb);
-		//planista.wykonanie_rozkazu(rej1.size());
-		rej2 = pobierzRozkaz(mm, pcb);
-		//planista.wykonanie_rozkazu(rej2.size());
-		liczba = stoi(rej2);
-
-		if (rej1 == "A");
-		{
-		//mm.Write()
-		}
-		if (rej1 == "B")
-		{
-
-		}
-		if (rej1 == "C")
-		{
-
-		}
-		}
-		*/
-
-
-		///////////////////// pobranie liczby od uzytkownika i zapis do pamieci
-
-		/*
-		if (operacja == "XX")
-		{
-		std::cout << "Podaj liczbe n: ";
-		std::string x;
-		std::getline(std::cin, x);
-		//int n = stoi(x);
-		//
-
-
-		}
-
-		*/
 		////////////////////////////////////////// skoki
 
 		if (operacja == "JP") //skok do adresu
@@ -702,70 +650,3 @@ public:
 
 
 };
-
-
-void main()
-{
-
-	//////////////////////////////////////////////////////////////////////
-	MemoryManager mm;
-	Tree drzewo;
-	mm.start();
-	PCB* Init = new PCB(1);
-	drzewo.Pname = *Init;
-	Init->page_table = mm.createPageTable(16, 1);
-	drzewo.F_process = NULL;
-
-
-	////////////////////////////////////////////////////////////////////
-	//ogarnac blad jak jest za malo pamieci
-	try {
-		drzewo.Fork_1(Init, "p1", "program.txt", mm, 50);
-	}
-	catch (int e) {
-		if (e == 1) {
-			//przekaz shellowi
-		}
-	}
-
-	try {
-		drzewo.Fork_1(Init, "p2", "program1.txt", mm, 30);
-	}
-	catch (int e) {
-		if (e == 1) {
-			//przekaz shellowi
-		}
-	}
-
-	Pipeline pipeline;
-	Planista planista;
-	//mm.showPMemory();
-	interpreter inter;
-	PCB running;
-
-
-	planista.check(running, drzewo);
-
-	//std::cout << mm.Get(&running, 21);
-	//mm.showPMemory();
-
-	inter.WykonajProgram(mm, running, planista, drzewo, pipeline);
-	planista.check(running, drzewo);
-
-	//mm.showPMemory();
-
-	inter.WykonajProgram(mm, running, planista, drzewo, pipeline);
-	planista.check(running, drzewo);
-
-	//mm.showPMemory();
-
-	inter.WykonajProgram(mm, running, planista, drzewo, pipeline);
-	planista.check(running, drzewo);
-
-
-	std::cin.ignore(1);
-
-
-
-
-}

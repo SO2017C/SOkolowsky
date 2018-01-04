@@ -601,7 +601,56 @@ void SHELL::switch_case()
 		break;
 	}
 	case OTHER:
-	{                                                                                                               // interpreter.COSTAM(command_line);
+	{             
+		//////////////////////////////////////////////////////////////////////
+		MemoryManager mm;
+		Tree drzewo;
+		mm.start();
+		PCB running;
+		PCB* Init = new PCB(1);
+		drzewo.Pname = *Init;
+		Init->page_table = mm.createPageTable(16, 1);
+		drzewo.F_process = NULL;
+
+
+		////////////////////////////////////////////////////////////////////
+		//ogarnac blad jak jest za malo pamieci
+		try {
+			drzewo.Fork_1(Init, "p1", "program.txt", mm, 50);
+		}
+		catch (int e) {
+			if (e == 1) {
+				//przekaz shellowi
+			}
+		}
+
+		try {
+			drzewo.Fork_1(Init, "p2", "program1.txt", mm, 30);
+		}
+		catch (int e) {
+			if (e == 1) {
+				//przekaz shellowi
+			}
+		}
+
+		Pipeline pipeline;
+		Planista planista;
+		mm.showPMemory();
+		//interpreter interpreter;
+	
+		planista.check(running, drzewo);
+		//std::cout << mm.Get(&running, 21);
+		mm.showPMemory();
+		interpreter.WykonajProgram(mm, running, planista, drzewo, pipeline);
+		planista.check(running, drzewo);
+		//mm.showPMemory();
+		interpreter.WykonajProgram(mm, running, planista, drzewo, pipeline);
+		planista.check(running, drzewo);
+		//mm.showPMemory();
+		interpreter.WykonajProgram(mm, running, planista, drzewo, pipeline);
+		planista.check(running, drzewo);
+		std::cin.ignore(1);
+
 		error_r();                                                                                                  // jezeli nie, to wywoluje metode error_r();
 		break;
 	}

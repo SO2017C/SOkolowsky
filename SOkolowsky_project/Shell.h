@@ -5,7 +5,7 @@
 #include "ACL.h"
 
 class SHELL {
-private:
+private:z
 	bool running;												// zmienna ktora sprawia, ze petla jest true, wiec dopki ktos nie wpisze "EXIT" to shell bedzie dzialal
 	std::vector<std::string> command_line;						// vector w ktorym przechowujemy: FUNKCJE oraz n-parametrow
 	enum spis_funkcji {
