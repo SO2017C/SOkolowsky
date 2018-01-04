@@ -10,7 +10,7 @@ bool Uprawnienia::uzytkownik_istnieje(std::string nazwa) {
 bool Uprawnienia::grupa_istnieje(std::string nazwa) {
 	for (auto e : wszystkie_grupy)
 		if (e.name == nazwa)
-			return true;
+			return true;//
 	return false;
 }
 
