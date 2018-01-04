@@ -2,10 +2,30 @@
 
 unsigned int Free_pid = 2;
 
-//zmiana stanu procesu
-void PCB::Change_process_state(Process_state x) {
+PCB::PCB() {
+	this->State = New;
+	this->Priority = 10;
+	this->Descriptor[0] = -1;
+	this->Descriptor[1] = -1;
+	this->Reg1 = 0;
+	this->Reg2 = 0;
+	this->Reg3 = 0;
+	this->Reg4 = 0;
+	this->CPU = 0;
+	this->Command_counter = 0;
+}
+PCB::PCB(int a) {
+	this->PID = a;
+	this->State = Ready;
+	this->Priority = 31;
+	this->Descriptor[0] = -1;
+	this->Descriptor[1] = -1;
+}
+PCB::~PCB() {}
+void PCB::Change_process_state(Process_state x) {//zmiana stanu procesu
 	State = x;
 }
+
 //stworzenie procesu
 void Tree::Fork(PCB * process, const std::string &name, MemoryManager &mm, const int &mem) {
 	//dodanie dziecka init'a
@@ -310,8 +330,6 @@ PCB Tree::Get_process_1(const std::string &proces_name) {
 		throw 1;
 	}
 }
-
-
 //lista gotowych procesow
 std::vector<PCB> Tree::Ready_processes() {
 	std::vector<PCB> vec;

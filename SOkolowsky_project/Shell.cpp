@@ -1,10 +1,6 @@
 ﻿#include "Shell.h"
 
 
-
-
-
-
 /* FORMATOWANIE DANYCH */
 SHELL::spis_funkcji SHELL::str_to_int(const std::string & Funkcja)
 {
@@ -38,7 +34,7 @@ bool SHELL::are_there_letters(const std::string &s)
 {
 	for (unsigned int i = 0; i < s.size(); i++)
 	{
-		if (s[i] < 65 || s[i] >= 91 && s[i] <= 96 || s[i]>123) // Odsy³am do tabeli ASCII
+		if (s[i] < 65 || s[i] >= 91 && s[i] <= 96 || s[i]>123) // Odsylam do tabeli ASCII
 			return false;
 	}
 	return true;
@@ -47,7 +43,7 @@ bool SHELL::are_there_numbers(const std::string &s)
 {
 	for (unsigned int i = 0; i < s.size(); i++)
 	{
-		if (s[i] < 48 || s[i]>57)// Odsy³am do tabeli ASCII
+		if (s[i] < 48 || s[i]>57)// Odsylam do tabeli ASCII
 			return false;
 	}
 	return true;
@@ -601,56 +597,7 @@ void SHELL::switch_case()
 		break;
 	}
 	case OTHER:
-	{             
-		//////////////////////////////////////////////////////////////////////
-		MemoryManager mm;
-		Tree drzewo;
-		mm.start();
-		PCB running;
-		PCB* Init = new PCB(1);
-		drzewo.Pname = *Init;
-		Init->page_table = mm.createPageTable(16, 1);
-		drzewo.F_process = NULL;
-
-
-		////////////////////////////////////////////////////////////////////
-		//ogarnac blad jak jest za malo pamieci
-		try {
-			drzewo.Fork_1(Init, "p1", "program.txt", mm, 50);
-		}
-		catch (int e) {
-			if (e == 1) {
-				//przekaz shellowi
-			}
-		}
-
-		try {
-			drzewo.Fork_1(Init, "p2", "program1.txt", mm, 30);
-		}
-		catch (int e) {
-			if (e == 1) {
-				//przekaz shellowi
-			}
-		}
-
-		Pipeline pipeline;
-		Planista planista;
-		mm.showPMemory();
-		//interpreter interpreter;
-	
-		planista.check(running, drzewo);
-		//std::cout << mm.Get(&running, 21);
-		mm.showPMemory();
-		interpreter.WykonajProgram(mm, running, planista, drzewo, pipeline);
-		planista.check(running, drzewo);
-		//mm.showPMemory();
-		interpreter.WykonajProgram(mm, running, planista, drzewo, pipeline);
-		planista.check(running, drzewo);
-		//mm.showPMemory();
-		interpreter.WykonajProgram(mm, running, planista, drzewo, pipeline);
-		planista.check(running, drzewo);
-		std::cin.ignore(1);
-
+	{                                                                                                               // interpreter.COSTAM(command_line);
 		error_r();                                                                                                  // jezeli nie, to wywoluje metode error_r();
 		break;
 	}

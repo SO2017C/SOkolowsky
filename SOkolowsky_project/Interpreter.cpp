@@ -1,22 +1,13 @@
 #include "Interpreter.h"
 
-extern class MemoryManager;
+/*extern class MemoryManager;
 extern class PCB;
 extern class Pipe;
 extern class Pipeline;
 extern class Tree;
-extern class Planista;
+extern class Planista;*/
 
-class interpreter{
-public:
-	int PID;
-	int rejA;
-	int rejB;
-	int rejC;
-	int rejD;
-	int liczRoz;
-
-	interpreter(){
+	/*interpreter::interpreter() {
 		PID = 0;
 		rejA = 0;
 		rejB = 0;
@@ -25,7 +16,10 @@ public:
 		liczRoz = 0;
 	}
 
-	void PobierzRejestry(Planista &planista, PCB &pcb, Tree &tree){ //pobieranie rejestrów z procesu który jest w stanie running
+	interpreter::~interpreter() {
+	}
+	*/
+	void interpreter::PobierzRejestry(Planista &planista, PCB &pcb, Tree &tree){ //pobieranie rejestrów z procesu który jest w stanie running
 
 		//planista.check(pcb, tree); //ustawianie procesu running
 		PID = pcb.PID;
@@ -36,8 +30,7 @@ public:
 		liczRoz = pcb.Command_counter;
 	}
 
-
-	void StanRej()
+	void interpreter::StanRej()
 	{
 		std::cout << "PID: " << PID << std::endl;
 		std::cout << "A: " << rejA << std::endl;
@@ -47,8 +40,7 @@ public:
 		std::cout << "--------------------------------" << std::endl << std::endl;
 	}
 
-	void zapiszRejestry(PCB &pcb)
-	{
+	void interpreter::zapiszRejestry(PCB &pcb){
 
 		pcb.PID = PID;
 		pcb.Reg1 = rejA;
@@ -58,8 +50,7 @@ public:
 		pcb.CPU+=liczRoz;
 	}
 
-	std::string pobierzRozkaz(MemoryManager &mm, PCB &pcb)
-	{
+	std::string interpreter::pobierzRozkaz(MemoryManager &mm, PCB &pcb){
 
 		std::string rozkaz;
 		rozkaz = mm.Get(&pcb, liczRoz);
@@ -68,8 +59,7 @@ public:
 
 	}
 
-	void WykonajProgram(MemoryManager &mm, PCB &pcb, Planista &planista, Tree &tree, Pipeline &pipeline)
-	{
+	void interpreter::WykonajProgram(MemoryManager &mm, PCB &pcb, Planista &planista, Tree &tree, Pipeline &pipeline){
 		/////////////////////////////////////
 		PobierzRejestry(planista, pcb, tree);
 		StanRej();
@@ -84,8 +74,7 @@ public:
 
 		///////////////////////////////////// dodawanie
 
-		if (operacja == "AD")
-		{
+		if (operacja == "AD"){
 
 			rej1 = pobierzRozkaz(mm, pcb);
 			////planista.wykonanie_rozkazu(rej1.size());
@@ -644,9 +633,3 @@ public:
 
 
 	}
-
-
-
-
-
-};

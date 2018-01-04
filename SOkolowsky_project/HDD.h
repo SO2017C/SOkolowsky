@@ -2,8 +2,6 @@
 #include "Biblioteki.h"
 #include "ACL.h"
 
-
-
 struct FAT_struct {//structure for keeping info about file
 	std::string file_name; //name of file
 	int file_size; //size of file (without bits for indexes)

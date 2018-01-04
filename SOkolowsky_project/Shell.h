@@ -4,8 +4,23 @@
 #include "HDD.h"
 #include "ACL.h"
 
+//NOWE
+#include "Interpreter.h"
+#include "MemoryManager.h"
+#include "Processes.h"
+//#include "Planner.h"
+//#include "Pipeline.h"
+extern class MemoryManager;
+extern class PCB;
+extern class Pipe;
+extern class Pipeline;
+extern class Tree;
+extern class Planista;
+extern class interpreter;
+//EO NOWE
+
 class SHELL {
-private:z
+private:
 	bool running;												// zmienna ktora sprawia, ze petla jest true, wiec dopki ktos nie wpisze "EXIT" to shell bedzie dzialal
 	std::vector<std::string> command_line;						// vector w ktorym przechowujemy: FUNKCJE oraz n-parametrow
 	enum spis_funkcji {
@@ -20,6 +35,7 @@ private:z
 	/*DEKLARACJE INNYCH MODU£ÓW*/
 	HDD DISK;
 	Permissions permissions;
+	MemoryManager MEM;
 	/*DEKLARACJE INNYCH MODU£ÓW*/
 
 

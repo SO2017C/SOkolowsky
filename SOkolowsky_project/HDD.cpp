@@ -1,8 +1,6 @@
 #include "HDD.h"
 //GLOBALNE123
 
-
-
 //DICTIONARY
 //DISK SIZE - disk's capacity. Number of bytes on disk. One disk = n*block, n - number of blocks, one block have 32 bytes
 //BLOCK - block of 32 bytes. It is one sector on disk.
