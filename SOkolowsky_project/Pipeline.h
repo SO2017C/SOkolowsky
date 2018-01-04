@@ -1,15 +1,14 @@
 #ifndef Pipeline_h
 #define Pipeline_h
-#include "Biblioteki.h"
-#include "Processes.h"
-#include "Synchronization.h"
+#include "Biblioteki.h";
+#include "Synchronization.h";
 
-extern class PCB;
-
+//extern class PCB;
 class Pipe;
+class PCB;
+class Tree;
 
-class Pipeline
-{
+class Pipeline {
 public:
 	Pipeline();
 	void createPipe(PCB &p1, PCB &p2); //funkcja tworz¹ca pokot gdzie p1 to referencja do procesu wysy³aj¹cego a p2 do odbieraj¹cego
@@ -19,8 +18,7 @@ public:
 
 };
 
-class Pipe
-{
+class Pipe {
 public:
 	Pipe(PCB& p1, PCB& p2, Pipeline& pl);
 	~Pipe();

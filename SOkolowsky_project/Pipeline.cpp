@@ -1,4 +1,5 @@
 #include "Pipeline.h"
+#include "processes.h";
 
 //znaczenia desktryporów:
 // -1 - proces nie chce dzia³aæ ju¿ na tym potoku

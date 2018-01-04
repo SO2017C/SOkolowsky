@@ -1,15 +1,16 @@
 #ifndef Processes_h
 #define Processes_h
 
-#include "Biblioteki.h"
-#include "Pipeline.h"
-#include "MemoryManager.h"
+#include "Biblioteki.h";
+//#include "Pipeline.h";
+#include "MemoryManager.h";
 
-extern class Pipeline;
+//extern class Pipeline;
 
-class Tree;
+//class Pipeline;
+//class Pipe;
 
-class PCB{
+class PCB {
 private:
 	enum Process_state { New, Ready, Running, Waiting, Terminated, Zombie };
 public:

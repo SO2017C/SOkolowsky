@@ -1,4 +1,5 @@
 #include "Processes.h"	
+#include "Pipeline.h"
 
 unsigned int Free_pid = 2;
 
