@@ -6,7 +6,9 @@ public:
 	/// DYSK
 	void CREATEFILE_H();
 	void READFILE_H();
+	void WRITEFILE_H();
 	void DELETEFILE_H();
+	void RENAMEFILE_H();
 
 	/// ACL
 	void USERADD_H();
@@ -14,8 +16,9 @@ public:
 	void GROUPADD_H();
 	void GROUPDEL_H();
 	void SWITCHUSER_H();
-	void ADDTOGROUP_H();
+	void USERMOD_H();
 	void GETFACL_H();
+	void SETFACL_H();
 
 	/// MY
 	void HELP_F();

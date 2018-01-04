@@ -4,12 +4,10 @@
 #include <array>
 #include <vector>
 #include <iostream>
-struct PCB
-{
-	void change_process_state(int Process_state);
-	std::array<int,2> deskryptor;
-};
+#include "Procesy.h"
+#include "Synchronization.h"
 
+extern class PCB;
 class Pipe;
 
 class Pipeline
