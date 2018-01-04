@@ -8,87 +8,6 @@
 
 Sync sync;
 
-Pipe::Pipe(PCB & p1, PCB& p2, Pipeline& pl)
-{
-	this->p1 = &p1;
-	this->p2 = &p2;
-	this->pl = &pl;
-}
-
-Pipe::~Pipe()
-{
-	p1->Descriptor[0] = -1;
-	p2->Descriptor[0] = -1;
-}
-
-
-
-
-std::string Pipe::read(unsigned int l)
-{
-	while (sync.test_and_set());    //synchronizacaj procesów
-
-	std::string temp;
-	if (p2->Descriptor[1] != 0) //sprawdzanie czy dany proces ma prawa do tej funkcji
-	{
-		std::cout << "Nie mo¿esz tego zrobiæ" << std::endl;
-	}
-	else if (p2->Descriptor[1] == 0)
-	{
-		if (buffer.empty())
-		{
-			//p2->Change_process_state(Waiting);
-			p2->State = Waiting;
-		}
-		else
-		{
-			if (l > buffer.size())  //sprawdznie czy wiadomoœc która chcemy odczytaæ jest d³u¿sza ni¿ wiadomoœc w potoku
-			{
-				for (int i = 0; i < buffer.size(); i++)
-				{
-					temp.push_back(buffer.front());
-					buffer.pop();
-				}
-				pl->deletePipe((*p1));
-			}
-			else
-			{
-				for (int i = 0; i < l; i++)
-				{
-					temp.push_back(buffer.front());
-					buffer.pop();
-				}
-			}
-		}
-
-	}
-
-	sync.unlock();
-	std::cout << temp << std::endl;
-	return temp;
-
-}
-
-void Pipe::write(const std::string& msg)
-{
-	while (sync.test_and_set()); //synchronizacaj procesów
-
-	if (p1->Descriptor[1] != 1) //sprawdzanie czy dany proces ma prawa do tej funkcji
-	{
-		std::cout << "Nie mo¿esz tego zrobiæ" << std::endl;
-	}
-	else if (p1->Descriptor[1] == 1)
-	{
-		for (auto x : msg)  //zapisywanie wiadomoœci do potoku
-		{
-			buffer.push(x);
-		}
-	}
-	sync.unlock();
-	std::cout << msg << std::endl;
-
-}
-
 Pipeline::Pipeline()
 {
 }
@@ -150,3 +69,80 @@ bool Pipeline::Pipe_exist(PCB & p1, PCB & p2)
 		return true;
 	}
 }
+
+Pipe::Pipe(PCB & p1, PCB& p2, Pipeline& pl){
+	this->p1 = &p1;
+	this->p2 = &p2;
+	this->pl = &pl;
+}
+
+Pipe::~Pipe(){
+	p1->Descriptor[0] = -1;
+	p2->Descriptor[0] = -1;
+}
+
+std::string Pipe::read(unsigned int l)
+{
+	while (sync.test_and_set());    //synchronizacaj procesów
+
+	std::string temp;
+	if (p2->Descriptor[1] != 0) //sprawdzanie czy dany proces ma prawa do tej funkcji
+	{
+		std::cout << "Nie mo¿esz tego zrobiæ" << std::endl;
+	}
+	else if (p2->Descriptor[1] == 0)
+	{
+		if (buffer.empty())
+		{
+			//p2->Change_process_state(Waiting);
+			//p2->State = Waiting; NA CHWILE
+		}
+		else
+		{
+			if (l > buffer.size())  //sprawdznie czy wiadomoœc która chcemy odczytaæ jest d³u¿sza ni¿ wiadomoœc w potoku
+			{
+				for (int i = 0; i < buffer.size(); i++)
+				{
+					temp.push_back(buffer.front());
+					buffer.pop();
+				}
+				pl->deletePipe((*p1));
+			}
+			else
+			{
+				for (int i = 0; i < l; i++)
+				{
+					temp.push_back(buffer.front());
+					buffer.pop();
+				}
+			}
+		}
+
+	}
+
+	sync.unlock();
+	std::cout << temp << std::endl;
+	return temp;
+
+}
+
+void Pipe::write(const std::string& msg)
+{
+	while (sync.test_and_set()); //synchronizacaj procesów
+
+	if (p1->Descriptor[1] != 1) //sprawdzanie czy dany proces ma prawa do tej funkcji
+	{
+		std::cout << "Nie mo¿esz tego zrobiæ" << std::endl;
+	}
+	else if (p1->Descriptor[1] == 1)
+	{
+		for (auto x : msg)  //zapisywanie wiadomoœci do potoku
+		{
+			buffer.push(x);
+		}
+	}
+	sync.unlock();
+	std::cout << msg << std::endl;
+
+}
+

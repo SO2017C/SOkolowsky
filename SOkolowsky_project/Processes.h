@@ -1,9 +1,12 @@
 #pragma once
 #include "Biblioteki.h"
-#include "MemoryManager.h"
 #include "Pipeline.h"
+#include "MemoryManager.h"
 
-class PCB {
+//extern class Pipeline;
+class Tree;
+
+class PCB{
 private:
 	enum Process_state { New, Ready, Running, Waiting, Terminated, Zombie };
 public:
@@ -25,15 +28,15 @@ public:
 	PCB(int a);	//konstruktor do init'a
 	~PCB();
 	void Change_process_state(Process_state x);//zmiana statusu procesu
-}
+};
 
 class Tree {
 public:
 	PCB Pname;										//dane procesu
 	PCB *F_process;									//wskaznik na ojca (dla init'a NULL)
 	std::vector<Tree*>Children_list;				//lista dzieci
-
-	void Fork(PCB * process, const std::string &name, MemoryManager &mm, const int &mem);
+	Tree();
+	void Fork(PCB *process, const std::string &name, MemoryManager &mm, const int &mem);
 	void Fork_1(PCB *process, const std::string &name, const std::string &file_name, MemoryManager &mm, const int &mem);
 	void Up_data(PCB &process, const std::string &name, const std::string &file_name, MemoryManager &mm, const int &mem);
 	void Display_tree();

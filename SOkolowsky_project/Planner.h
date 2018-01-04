@@ -1,7 +1,7 @@
 #pragma once
 #include "Biblioteki.h"
 #include "Processes.h"
-extern class Tree;
+//extern class Tree;
 class Planista
 {
 public:

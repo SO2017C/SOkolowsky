@@ -26,8 +26,9 @@ void PCB::Change_process_state(Process_state x) {//zmiana stanu procesu
 	State = x;
 }
 
+Tree::Tree() {}
 //stworzenie procesu
-void Tree::Fork(PCB * process, const std::string &name, MemoryManager &mm, const int &mem) {
+void Tree::Fork(PCB *process, const std::string &name, MemoryManager &mm, const int &mem) {
 	//dodanie dziecka init'a
 	if (process->PID == Pname.PID) {
 		Tree *temp = new Tree();

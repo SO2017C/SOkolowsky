@@ -125,7 +125,7 @@ void MemoryManager::ShowPageFile() {
 	for (auto x : PageFile) {
 		std::cout << "PROCESS ID: " << x.first << std::endl;
 		for (int i = 0; i < x.second.size(); i++) {
-			x.second.at(i).print();
+			//x.second.at(i).print();//NA CHWILE
 		}
 	}
 }
